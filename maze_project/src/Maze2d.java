@@ -1,4 +1,3 @@
-import java.util.Arrays;
 
 public class Maze2d {
 
@@ -83,7 +82,7 @@ public class Maze2d {
         }
 
 
-        // Printing zeroes and ones seperated by ','
+        // Printing zeroes and ones separated by ','
 
 //        for (int i = 0; i< this.mazeSize; i++) {
 //            for (int j = 0; j < this.mazeSize-1; j++) {
