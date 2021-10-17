@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Point {
     private int x;
     private int y;
+    private Point parent;
 
     private boolean visited;
 
@@ -59,7 +59,9 @@ public class Point {
         return availableNeighbors;
     }
 
-
+    public Point getParent() {
+        return this.parent;
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -71,6 +73,10 @@ public class Point {
 
     public void setVisited() {
         this.visited = true;
+    }
+
+    public void setParent(Point p) {
+        this.parent = p;
     }
 
     public boolean equals(Point other) {

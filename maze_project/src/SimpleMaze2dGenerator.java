@@ -15,8 +15,10 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
         // set Random walls on generated maze:
         setRandomWalls();
 
-        // create path from entrance to exit points recursive way:
-        createPathRecursively();
+        // create path from entrance to exit points recursive way (not in use):
+        //createPathRecursively();
+
+        createPathIteratively();
 
         // clear the maze according to the path:
         clearMazeWithRoute();
@@ -25,7 +27,7 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
     }
 
 
-    private Maze2d setRandomWalls() {
+    private void setRandomWalls() {
 
         Random rand = new Random();
         for (int i = 0; i< this.simpleMaze.mazeSize; i++) {
@@ -33,7 +35,6 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
                 this.simpleMaze.setCurrMazePoint(i, j, rand.nextBoolean());
             }
         }
-        return this.simpleMaze;
     }
 
     private void createPathRecursively() {
@@ -69,7 +70,7 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
                     // Choose next neighbor randomly in order to create different paths on each iteration:
                     Collections.shuffle(currPointNeighbors);
 
-                // Adding the corrent point to the route and moving to next point recursively:
+                // Adding the current point to the route and moving to next point recursively:
                 solutionRoute.push(entrance);
                 pathBuilderDFS(currPointNeighbors.get(0), points);
             }
@@ -80,6 +81,54 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
         return false;
     }
 
+    private void createPathIteratively() {
+
+        Stack<Point> routesTrace = new Stack<>();
+        Point[][] points = new Point[this.simpleMaze.mazeSize][this.simpleMaze.mazeSize];
+
+        for (int i = 0; i < this.simpleMaze.mazeSize; i++)
+            for (int j = 0; j < this.simpleMaze.mazeSize; j++)
+                points[i][j] = new Point(i, j);
+
+
+
+        routesTrace.push(this.simpleMaze.entrance);
+
+        while (!routesTrace.empty()) {
+
+            Point currPoint = routesTrace.pop();
+            if (currPoint.equals(this.simpleMaze.getExit())) {
+                routesTrace.push(currPoint);
+                getSolutionPath(routesTrace);
+            }
+
+            // Getting all available neighbors:
+            ArrayList<Point> currPointNeighbors = currPoint.getAvailableNeighbors(this.simpleMaze.mazeSize, points);
+
+            // Choose next neighbor randomly in order to create different paths on each iteration:
+            Collections.shuffle(currPointNeighbors);
+
+            for (Point neighbor: currPointNeighbors) {
+                neighbor.setVisited();
+                neighbor.setParent(currPoint);
+                routesTrace.push(neighbor);
+            }
+        }
+    }
+
+    private void getSolutionPath(Stack<Point> routesTrace) {
+        this.solutionRoute = new Stack<>();
+        Point revSolutionPoint = routesTrace.pop();
+
+        while (revSolutionPoint.getParent() != null) {
+            this.solutionRoute.push(revSolutionPoint);
+            revSolutionPoint = revSolutionPoint.getParent();
+        }
+
+        // Adding the start point:
+        this.solutionRoute.push(revSolutionPoint);
+    }
+
     private void clearMazeWithRoute() {
 
         while (!this.solutionRoute.empty()) {
@@ -88,4 +137,6 @@ public class SimpleMaze2dGenerator extends AbstractMaze2dGenerator {
         }
 
     }
+
+
 }
