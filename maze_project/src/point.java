@@ -1,18 +1,20 @@
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
-public class Point {
+public class point {
     private int x;
     private int y;
-    private Point parent;
+    private point parent;
 
     private boolean visited;
 
-    public Point(int x, int y) {
+    public point(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point getPoint() {
+    public point getPoint() {
         return this;
     }
 
@@ -28,9 +30,11 @@ public class Point {
         return visited;
     }
 
-    public ArrayList<Point> getAvailableNeighbors(int mazeSize, Point[][] points) {
 
-        ArrayList<Point> availableNeighbors = new ArrayList<>();
+    // This method used for getting neighbors while generating the maze using DFS with the nearest neighbor only:
+    public ArrayList<point> getAvailableNeighbors(int mazeSize, point[][] points) {
+
+        ArrayList<point> availableNeighbors = new ArrayList<>();
 
         // North move:
         if(this.getX() != 0) {
@@ -59,7 +63,10 @@ public class Point {
         return availableNeighbors;
     }
 
-    public Point getParent() {
+
+
+
+    public point getParent() {
         return this.parent;
     }
 
@@ -75,11 +82,11 @@ public class Point {
         this.visited = true;
     }
 
-    public void setParent(Point p) {
+    public void setParent(point p) {
         this.parent = p;
     }
 
-    public boolean equals(Point other) {
+    public boolean equals(point other) {
         return this.getX() == other.getX() && this.getY() == other.getY();
     }
 }
