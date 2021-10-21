@@ -1,8 +1,8 @@
 
 public class maze2d {
 
-    point entrance;
-    point exit;
+    mazePoint entrance;
+    mazePoint exit;
     boolean[][] currMaze;
     int mazeSize;
 
@@ -14,16 +14,16 @@ public class maze2d {
         java.util.Arrays.fill(this.currMaze[1], false);
 
         this.mazeSize = mazeSize;
-        this.entrance = new point(0, 0);
-        this.exit = new point(mazeSize - 1, mazeSize - 1);
+        this.entrance = new mazePoint(0, 0);
+        this.exit = new mazePoint(mazeSize - 1, mazeSize - 1);
     }
 
 
-    public point getEntrance() {
+    public mazePoint getEntrance() {
         return entrance;
     }
 
-    public point getExit() {
+    public mazePoint getExit() {
         return exit;
     }
 
@@ -36,15 +36,15 @@ public class maze2d {
     }
 
 
-    public void setPointCoorToMazeVal(point p) {
+    public void setPointCoorToMazeVal(mazePoint p) {
         this.currMaze[p.getX()][p.getY()] = true;
     }
 
-    public void setEntrance(point entrance) {
+    public void setEntrance(mazePoint entrance) {
         this.entrance = entrance;
     }
 
-    public void setExit(point exit) {
+    public void setExit(mazePoint exit) {
         this.exit = exit;
     }
 

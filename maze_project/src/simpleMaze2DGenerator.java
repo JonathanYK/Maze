@@ -6,7 +6,7 @@ import java.util.Stack;
 public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
 
     maze2d simpleMaze;
-    Stack<point> solutionRoute;
+    Stack<mazePoint> solutionRoute;
 
     @Override
     public maze2d generate(int mazeSize) {
@@ -41,16 +41,16 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
     private void createPathRecursively() {
 
         this.solutionRoute = new Stack<>();
-        point[][] points = new point[this.simpleMaze.mazeSize][this.simpleMaze.mazeSize];
+        mazePoint[][] mazePoints = new mazePoint[this.simpleMaze.mazeSize][this.simpleMaze.mazeSize];
         for (int i = 0; i < this.simpleMaze.mazeSize; i++)
             for (int j = 0; j < this.simpleMaze.mazeSize; j++)
-                points[i][j] = new point(i, j);
+                mazePoints[i][j] = new mazePoint(i, j);
 
-        pathBuilderDFS(simpleMaze.getEntrance(), points);
+        pathBuilderDFS(simpleMaze.getEntrance(), mazePoints);
     }
 
 
-    private boolean pathBuilderDFS(point entrance, point[][] points) {
+    private boolean pathBuilderDFS(mazePoint entrance, mazePoint[][] mazePoints) {
 
             // if goal is reached (current point is the exit point):
             if (entrance.equals(this.simpleMaze.getExit())) {
@@ -59,24 +59,24 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
             }
 
             // Setting current point as visited
-            points[entrance.getX()][entrance.getY()].setVisited();
+            mazePoints[entrance.getX()][entrance.getY()].setVisited(true);
 
             // Getting all available neighbors:
-            ArrayList<point> currPointNeighbors = entrance.getAvailableNeighbors(this.simpleMaze.mazeSize, points);
+            ArrayList<mazePoint> currMazePointNeighbors = entrance.getAvailableNeighbors(this.simpleMaze.mazeSize, mazePoints);
 
             // If there are unvisited neighbors:
-            if (currPointNeighbors.size() > 0) {
-                if (currPointNeighbors.size() > 1)
+            if (currMazePointNeighbors.size() > 0) {
+                if (currMazePointNeighbors.size() > 1)
                     // Choose next neighbor randomly in order to create different paths on each iteration:
-                    Collections.shuffle(currPointNeighbors);
+                    Collections.shuffle(currMazePointNeighbors);
 
                 // Adding the current point to the route and moving to next point recursively:
                 solutionRoute.push(entrance);
-                pathBuilderDFS(currPointNeighbors.get(0), points);
+                pathBuilderDFS(currMazePointNeighbors.get(0), mazePoints);
             }
             else {
                 // If there aren't unvisited neighbors (traceback):
-                pathBuilderDFS(solutionRoute.pop(), points);
+                pathBuilderDFS(solutionRoute.pop(), mazePoints);
             }
         return false;
     }
@@ -84,57 +84,57 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
 
     private void createPathIteratively() {
 
-        Stack<point> routesTrace = new Stack<>();
-        point[][] points = new point[this.simpleMaze.mazeSize][this.simpleMaze.mazeSize];
+        Stack<mazePoint> routesTrace = new Stack<>();
+        mazePoint[][] mazePoints = new mazePoint[this.simpleMaze.mazeSize][this.simpleMaze.mazeSize];
 
         for (int i = 0; i < this.simpleMaze.mazeSize; i++)
             for (int j = 0; j < this.simpleMaze.mazeSize; j++)
-                points[i][j] = new point(i, j);
+                mazePoints[i][j] = new mazePoint(i, j);
 
         routesTrace.push(this.simpleMaze.entrance);
 
         while (!routesTrace.empty()) {
 
-            point currPoint = routesTrace.pop();
-            if (currPoint.equals(this.simpleMaze.getExit())) {
-                routesTrace.push(currPoint);
+            mazePoint currMazePoint = routesTrace.pop();
+            if (currMazePoint.equals(this.simpleMaze.getExit())) {
+                routesTrace.push(currMazePoint);
                 getSolutionPath(routesTrace);
             }
 
             // Getting all available neighbors:
-            ArrayList<point> currPointNeighbors = currPoint.getAvailableNeighbors(this.simpleMaze.mazeSize, points);
+            ArrayList<mazePoint> currMazePointNeighbors = currMazePoint.getAvailableNeighbors(this.simpleMaze.mazeSize, mazePoints);
 
             // Choose next neighbor randomly in order to create different paths on each iteration:
-            Collections.shuffle(currPointNeighbors);
+            Collections.shuffle(currMazePointNeighbors);
 
-            for (point neighbor: currPointNeighbors) {
-                neighbor.setVisited();
-                neighbor.setParent(currPoint);
+            for (mazePoint neighbor: currMazePointNeighbors) {
+                neighbor.setVisited(true);
+                neighbor.setParent(currMazePoint);
                 routesTrace.push(neighbor);
             }
         }
     }
 
 
-    private void getSolutionPath(Stack<point> routesTrace) {
+    private void getSolutionPath(Stack<mazePoint> routesTrace) {
         this.solutionRoute = new Stack<>();
-        point revSolutionPoint = routesTrace.pop();
+        mazePoint revSolutionMazePoint = routesTrace.pop();
 
-        while (revSolutionPoint.getParent() != null) {
-            this.solutionRoute.push(revSolutionPoint);
-            revSolutionPoint = revSolutionPoint.getParent();
+        while (revSolutionMazePoint.getParent() != null) {
+            this.solutionRoute.push(revSolutionMazePoint);
+            revSolutionMazePoint = revSolutionMazePoint.getParent();
         }
 
         // Adding the start point:
-        this.solutionRoute.push(revSolutionPoint);
+        this.solutionRoute.push(revSolutionMazePoint);
     }
 
 
     private void clearMazeWithRoute() {
 
         while (!this.solutionRoute.empty()) {
-            point currRoutePoint = this.solutionRoute.pop();
-            this.simpleMaze.setCurrMazePoint(currRoutePoint.getX(), currRoutePoint.getY(), false);
+            mazePoint currRouteMazePoint = this.solutionRoute.pop();
+            this.simpleMaze.setCurrMazePoint(currRouteMazePoint.getX(), currRouteMazePoint.getY(), false);
         }
     }
 }

@@ -1,20 +1,18 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-public class point {
+public class mazePoint {
     private int x;
     private int y;
-    private point parent;
+    private mazePoint parent;
+    private boolean visited = false;
 
-    private boolean visited;
-
-    public point(int x, int y) {
+    public mazePoint(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public point getPoint() {
+    public mazePoint getPoint() {
         return this;
     }
 
@@ -32,32 +30,32 @@ public class point {
 
 
     // This method used for getting neighbors while generating the maze using DFS with the nearest neighbor only:
-    public ArrayList<point> getAvailableNeighbors(int mazeSize, point[][] points) {
+    public ArrayList<mazePoint> getAvailableNeighbors(int mazeSize, mazePoint[][] mazePoints) {
 
-        ArrayList<point> availableNeighbors = new ArrayList<>();
+        ArrayList<mazePoint> availableNeighbors = new ArrayList<>();
 
         // North move:
         if(this.getX() != 0) {
-            if(!points[x-1][y].isVisited())
-                availableNeighbors.add(points[x-1][y]);
+            if(!mazePoints[x-1][y].isVisited())
+                availableNeighbors.add(mazePoints[x-1][y]);
         }
 
         // South move:
         if(this.getX() < mazeSize-1) {
-            if (!points[x + 1][y].isVisited())
-                availableNeighbors.add(points[x + 1][y]);
+            if (!mazePoints[x + 1][y].isVisited())
+                availableNeighbors.add(mazePoints[x + 1][y]);
         }
 
         // West move:
         if(this.getY() != 0) {
-            if (!points[x][y - 1].isVisited())
-                availableNeighbors.add(points[x][y - 1]);
+            if (!mazePoints[x][y - 1].isVisited())
+                availableNeighbors.add(mazePoints[x][y - 1]);
     }
 
         // East move:
         if(this.getY() < mazeSize-1) {
-            if (!points[x][y + 1].isVisited())
-                availableNeighbors.add(points[x][y + 1]);
+            if (!mazePoints[x][y + 1].isVisited())
+                availableNeighbors.add(mazePoints[x][y + 1]);
     }
 
         return availableNeighbors;
@@ -66,7 +64,7 @@ public class point {
 
 
 
-    public point getParent() {
+    public mazePoint getParent() {
         return this.parent;
     }
 
@@ -78,15 +76,15 @@ public class point {
         this.y = y;
     }
 
-    public void setVisited() {
-        this.visited = true;
+    public void setVisited(boolean val) {
+        this.visited = val;
     }
 
-    public void setParent(point p) {
+    public void setParent(mazePoint p) {
         this.parent = p;
     }
 
-    public boolean equals(point other) {
+    public boolean equals(mazePoint other) {
         return this.getX() == other.getX() && this.getY() == other.getY();
     }
 }
