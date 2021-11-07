@@ -16,6 +16,10 @@ public class mazePoint {
         return this;
     }
 
+    public mazePoint getPointOnMazePoints(mazePoint[][] mazePoints) {
+        return mazePoints[this.getX()][this.getY()];
+    }
+
     public int getX() {
         return x;
     }
@@ -27,42 +31,6 @@ public class mazePoint {
     public boolean isVisited() {
         return visited;
     }
-
-
-    // This method used for getting neighbors while generating the maze using DFS with the nearest neighbor only:
-    public ArrayList<mazePoint> getAvailableNeighbors(int mazeSize, mazePoint[][] mazePoints) {
-
-        ArrayList<mazePoint> availableNeighbors = new ArrayList<>();
-
-        // North move:
-        if(this.getX() != 0) {
-            if(!mazePoints[x-1][y].isVisited())
-                availableNeighbors.add(mazePoints[x-1][y]);
-        }
-
-        // South move:
-        if(this.getX() < mazeSize-1) {
-            if (!mazePoints[x + 1][y].isVisited())
-                availableNeighbors.add(mazePoints[x + 1][y]);
-        }
-
-        // West move:
-        if(this.getY() != 0) {
-            if (!mazePoints[x][y - 1].isVisited())
-                availableNeighbors.add(mazePoints[x][y - 1]);
-    }
-
-        // East move:
-        if(this.getY() < mazeSize-1) {
-            if (!mazePoints[x][y + 1].isVisited())
-                availableNeighbors.add(mazePoints[x][y + 1]);
-    }
-
-        return availableNeighbors;
-    }
-
-
-
 
     public mazePoint getParent() {
         return this.parent;
@@ -84,7 +52,21 @@ public class mazePoint {
         this.parent = p;
     }
 
+
     public boolean equals(mazePoint other) {
         return this.getX() == other.getX() && this.getY() == other.getY();
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("\nmazePoint: [");
+        sb.append(this.getX());
+        sb.append("], [");
+        sb.append(this.getY());
+        sb.append("]");
+
+        return sb.toString();
     }
 }
