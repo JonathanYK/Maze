@@ -1,84 +1,88 @@
 import java.util.ArrayList;
 
-public class ASTAR extends Solution {
+public class ASTAR extends CommonSearcher {
 
+    public Solution search(Searchable searchable) {
 
-    public ArrayList<?> astar(maze2d maze) {
+        // shortest (solution) state path:
+        Solution solution = new Solution();
 
-        ArrayList<?> solution = new ArrayList<>();
+        // ArrayList that holds the discovered states:
+        ArrayList<State> StatesOpenedPool = new ArrayList<>();
 
-        // ArrayList that holds the discovered points:
-        ArrayList<mazeStarPoint> mazeStarPointsPoolOpened = new ArrayList<>();
+        // ArrayList that holds the already visited states:
+        ArrayList<State> StatesClosedPool = new ArrayList<>();
 
-        // ArrayList that holds the already visited:
-        ArrayList<mazeStarPoint> mazeStarPointsPoolClosed = new ArrayList<>();
+        // Holding the entrance and exit states:
+        State EntranceState = searchable.getStartState();
+        State ExitState = searchable.getGoalState();
 
-        mazeStarPoint[][] mazeStarPoints = new mazeStarPoint[maze.mazeSize][maze.mazeSize];
-        for (int i = 0; i < maze.mazeSize; i++) {
-            for (int j = 0; j < maze.mazeSize; j++)
-                mazeStarPoints[i][j] = new mazeStarPoint(i, j);
-        }
+        // Calculating costs for entrance and exit states:
+        //EntranceState.setGcost(EntranceState);
+        EntranceState.setHcost(ExitState);
 
-        // Holding the entrance and exit points:
-        mazeStarPoint StarEntrancePoint = mazeStarPoints[maze.getEntrance().getX()][maze.getEntrance().getY()];
-        mazeStarPoint StarExitPoint = mazeStarPoints[maze.getExit().getX()][maze.getExit().getY()];
+        // Adding entrance state to StatesOpenedPool:
+        StatesOpenedPool.add(EntranceState);
+        // evaluate on every state move:
+        this.evaluated();
 
-        // Calculating costs for entrance and exit points:
-        StarEntrancePoint.setGcost(StarEntrancePoint);
-        StarEntrancePoint.setHcost(StarExitPoint);
+        while (!StatesOpenedPool.isEmpty()) {
 
-        // Adding entrance point to discovered points pool:
-        mazeStarPointsPoolOpened.add(StarEntrancePoint);
+            State currState = StatesOpenedPool.get(0);
 
-        while (!mazeStarPointsPoolOpened.isEmpty()) {
-
-            mazeStarPoint currStarPoint = mazeStarPointsPoolOpened.get(0);
-
-            // finding the best next point - with the best fCost (or hCost if there is more then one point with best fCost)
+            // finding the best next point - with the best fCost (or hCost if 4 = {State@882} there is more then one point with best fCost)
             // TODO: replace with minStarpoint method
-            for (int i = 1; i <= mazeStarPointsPoolOpened.size() - 1; i++) {
-                if (mazeStarPointsPoolOpened.get(i).getfCost() < currStarPoint.getfCost() ||
-                        mazeStarPointsPoolOpened.get(i).getfCost() == currStarPoint.getfCost() && mazeStarPointsPoolOpened.get(i).gethCost() < currStarPoint.gethCost()) {
 
-                    currStarPoint = mazeStarPointsPoolOpened.get(i);
+            for (int i = 1; i <= StatesOpenedPool.size() - 1; i++) {
+                if (StatesOpenedPool.get(i).getFcost() < currState.getFcost() ||
+                        StatesOpenedPool.get(i).getFcost() == currState.getFcost() && StatesOpenedPool.get(i).getHcost() < currState.getHcost()) {
+
+                    currState = StatesOpenedPool.get(i);
                 }
             }
 
-            // moving the selected best fCost point from discovered to visited pool:
-            mazeStarPointsPoolOpened.remove(currStarPoint);
-            mazeStarPointsPoolClosed.add(currStarPoint);
+            // moving the selected best fCost state from discovered to visited pool:
+            StatesOpenedPool.remove(currState);
 
+            if (!isStateAlreadyInArraylist(currState, StatesClosedPool)) {
+                StatesClosedPool.add(currState);
+            }
 
-            if (currStarPoint.equals(StarExitPoint)) {
+            if (currState.getStringState().equals(ExitState.getStringState())) {
                 // get the solution path from parent:
-                this.getFullRoute(solution, currStarPoint);
+
+                //this.getFullRoute(solution, currState);
+                solution.setSolution(currState);
                 return solution;
             }
 
-            // get all possible neighbors of currStarPoint:
-            ArrayList<mazeStarPoint> availNeighbors = maze.getAvailableNeighbors(currStarPoint, mazeStarPoints);
+            // get all possible neighbors of currState:
+            ArrayList<State> availNeighbors = searchable.getAllPossibleStates(currState);
 
             // iterating on all neighbors:
-            for (mazeStarPoint iterNeighborPoint : availNeighbors) {
+            for (State iterNeighborState : availNeighbors) {
 
                 // if iterNeighbor already visited, skip it:
-                if (mazeStarPointsPoolClosed.contains(iterNeighborPoint))
+                if (StatesClosedPool.contains(iterNeighborState))
                     continue;
 
+                // if we found a better path to iterNeighborState (parent with less moves) or iterNeighborState isn't discovered at all:
+                if (currState.getGcost() + 1 < iterNeighborState.getGcost() || !StatesOpenedPool.contains(iterNeighborState)) {
 
-                // if we found a better path to iterNeighbor (parent with less moves) or iterNeighbor isn't discovered at all:
-                if (currStarPoint.getgCost() + 1 < iterNeighborPoint.getgCost() || !mazeStarPointsPoolOpened.contains(iterNeighborPoint)) {
-
-                    // calculate iterNeighbor costs:
-                    iterNeighborPoint.setGcost(currStarPoint);
-                    iterNeighborPoint.setHcost(StarExitPoint);
+                    // calculate iterNeighborState costs:
+                    iterNeighborState.setGcost(EntranceState);
+                    iterNeighborState.setHcost(ExitState);
 
                     // set parent of iterNeighbor
-                    iterNeighborPoint.setParent(currStarPoint);
+                    iterNeighborState.setParent(currState);
 
-                    // if iterNeighbor not in discovered pool (prev if was true of first condition):
-                    if (!mazeStarPointsPoolOpened.contains(iterNeighborPoint))
-                        mazeStarPointsPoolOpened.add(iterNeighborPoint);
+                    // if iterNeighborState not in discovered pool (prev if was true of first condition):
+                    //if (!StatesOpenedPool.contains(iterNeighborState))
+
+                    if (!isStateAlreadyInArraylist(iterNeighborState, StatesOpenedPool) && !isStateAlreadyInArraylist(iterNeighborState, StatesClosedPool))
+                        StatesOpenedPool.add(iterNeighborState);
+                        // evaluate on every state move:
+                        this.evaluated();
                 }
             }
         }

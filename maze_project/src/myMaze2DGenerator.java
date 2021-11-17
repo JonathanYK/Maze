@@ -22,10 +22,9 @@ public class myMaze2DGenerator extends abstractMaze2DGenerator {
             for (int j = 0; j < maze.mazeSize; j++)
                 pointsPath[i][j] = new mazePoint(i, j);
 
-
         // inserting start point to the maze structure:
-        mazePoint defStartingMazePoint = pointsPath[maze.getEntrance().getX()][maze.getEntrance().getY()];
-        mazeStructure.add(new mazePoint[] {defStartingMazePoint, defStartingMazePoint});
+        mazePoint entranceMazePoint = pointsPath[maze.getEntrance().x][maze.getEntrance().y];
+        mazeStructure.add(new mazePoint[] {entranceMazePoint, entranceMazePoint});
 
 
         // while there are unvisited available dual neighbors:
@@ -42,12 +41,41 @@ public class myMaze2DGenerator extends abstractMaze2DGenerator {
                 pointsPath[currDualNeighbor[1].getX()][currDualNeighbor[1].getY()].setVisited(true);
 
                 // set visited both neighbors on myMaze:
-                maze.setPointCoorToMazeVal(currDualNeighbor[0]);
-                maze.setPointCoorToMazeVal(currDualNeighbor[1]);
+                maze.setPointVal(currDualNeighbor[0].getX(), currDualNeighbor[0].getY(), true);
+                maze.setPointVal(currDualNeighbor[1].getX(), currDualNeighbor[1].getY(), true);
 
                 // get all dual available neighbors:
-                maze.getDualAvailNeighbors(pointsPath, currDualNeighbor, mazeStructure);
+                getDualAvailNeighbors(maze, pointsPath, currDualNeighbor, mazeStructure);
             }
+        }
+    }
+
+    // This method used for getting dual neighbors (first nearest and second nearest from North/South/East/West):
+    public void getDualAvailNeighbors(maze2d maze, mazePoint[][] pointsPath, mazePoint[] currDualNeighbor,
+                                      ArrayList<mazePoint[]> mazeStructure) {
+
+        // only the SECOND nearest is relevant:
+        int secX = currDualNeighbor[1].getX();
+        int secY = currDualNeighbor[1].getY();
+
+        // North move:
+        if(secX>=2 && !pointsPath[secX-2][secY].isVisited()) {
+            mazeStructure.add(new mazePoint[] {pointsPath[secX-1][secY], pointsPath[secX-2][secY]});
+        }
+
+        // South move:
+        if(secX<maze.mazeSize-2 && !pointsPath[secX+2][secY].isVisited()) {
+            mazeStructure.add(new mazePoint[] {pointsPath[secX+1][secY], pointsPath[secX+2][secY]});
+        }
+
+        // West move:
+        if(secY>=2 && !pointsPath[secX][secY-2].isVisited()) {
+            mazeStructure.add(new mazePoint[] {pointsPath[secX][secY-1], pointsPath[secX][secY-2]});
+        }
+
+        // East move:
+        if(secY<maze.mazeSize-2 && !pointsPath[secX][secY+2].isVisited()) {
+            mazeStructure.add(new mazePoint[] {pointsPath[secX][secY+1], pointsPath[secX][secY+2]});
         }
     }
 }

@@ -1,52 +1,56 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
+public class BFS extends CommonSearcher {
 
-public class BFS extends Solution {
+    public Solution search(Searchable searchable) {
 
+        // shortest (solution) state path:
+        Solution solution = new Solution();
 
-    public ArrayList<?> bfs(maze2d maze) {
+        // queue that will store all available states:
+        Queue<State> availavleStateQueue = new LinkedList<>();
 
-        // shortest (solution) path:
-        ArrayList<?> solution = new ArrayList<>();
+        // save all visited states - in order to filter next available states:
+        ArrayList<State> visitedStates = new ArrayList<>();
 
-        // queue that will store all the paths:
-        Queue<mazePoint> mazePointsQueue = new LinkedList<>();
+        // adding the start state to availavleStateQueue:
+        availavleStateQueue.add(searchable.getStartState());
+        // evaluate on every state move:
+        this.evaluated();
 
+        while (!availavleStateQueue.isEmpty()) {
 
-        // creating the actual preview of maze using mazePoints:
-        maze.mazePreviewPoints = new mazePoint[maze.mazeSize][maze.mazeSize];
-        for (int i = 0; i < maze.mazeSize; i++)
-            for (int j = 0; j < maze.mazeSize; j++)
-                maze.mazePreviewPoints[i][j] = new mazePoint(i, j);
+            // pulling the current state:
+            State currState = availavleStateQueue.remove();
 
-        // adding the start point to the queue:
-        mazePointsQueue.add(maze.getEntrance().getPointOnMazePoints(maze.mazePreviewPoints));
+            // add currState to visitedStates:
+            visitedStates.add(currState);
 
-
-        while (!mazePointsQueue.isEmpty()) {
-
-            // pulling the current point and setting it as visited:
-            mazePoint currPoint = mazePointsQueue.remove();
-            // mazePoints[currPoint.getX()][currPoint.getY()].setVisited(true);
-            currPoint.setVisited(true);
-
-            // breaking rule, shortest route to exit point found:
-            if (currPoint.equals(maze.getExit())) {
-                getFullRoute(solution, currPoint);
+            // breaking rule, shortest route to exit state found:
+            if (currState.getStringState().equals(searchable.getGoalState().getStringState())) {
+                solution.setSolution(currState);
                 return solution;
             }
 
-            // getting all available neigbors, then assigning to all of them their parent (currPoint):
-            ArrayList<mazePoint> avaiNeigh = maze.getAvailableNeighbors(currPoint, maze.mazePreviewPoints);
-            for (mazePoint mp : avaiNeigh)
-                mp.setParent(currPoint);
+            // getting all possible states:
+            ArrayList<State> possibleStates = searchable.getAllPossibleStates(currState);
 
-            // adding all available neighbors with actual parent of currPoint to the main queue:
-            mazePointsQueue.addAll(avaiNeigh);
+            // iterate on all possible states, searching unvisited states:
+            for (State posState : possibleStates) {
+
+                // for all unvisited states yet, set parent and add to availavleStateQueue:
+                if (!isStateAlreadyInArraylist(posState, visitedStates)) {
+                    posState.setParent(currState);
+
+                    if (!isStateAlreadyInArraylist(posState, availavleStateQueue))
+                        availavleStateQueue.add(posState);
+
+                    // evaluate on every state move:
+                    this.evaluated();
+                }
+            }
         }
         return solution;
     }
-
 }
+
