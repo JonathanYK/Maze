@@ -1,4 +1,3 @@
-import edu.princeton.cs.introcs.In;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -24,6 +23,8 @@ class Node
         this.left = left;
         this.right = right;
     }
+
+    public Node() {}
 }
 
 class mazeCompression {
@@ -46,21 +47,21 @@ class mazeCompression {
     }
 
     // Traverse the Huffman Tree and decode the encoded string
-    public static int decode(Node root, int index, StringBuilder sb) {
+    public static int decode(String decodedStr, Node root, int index, String sb) {
         if (root == null) {
             return index;
         }
 
         // Found a leaf node
         if (isLeaf(root)) {
-            System.out.print(root.ch);
+            decodedStr.concat(root.ch.toString());
             return index;
         }
 
         index++;
 
         root = (sb.charAt(index) == '0') ? root.left : root.right;
-        index = decode(root, index, sb);
+        index = decode(decodedStr, root, index, sb);
         return index;
     }
 
@@ -69,11 +70,12 @@ class mazeCompression {
         return root.left == null && root.right == null;
     }
 
+
     // Builds Huffman Tree and decodes the given input text
-    public static void buildHuffmanTree(String text) {
+    public static Node huffmanTreeBuilder(String text) {
         // Base case: empty string
         if (text == null || text.length() == 0) {
-            return;
+            return new Node();
         }
 
         // Count the frequency of appearance of each character
@@ -116,7 +118,13 @@ class mazeCompression {
         }
 
         // `root` stores pointer to the root of Huffman Tree
-        Node root = pq.peek();
+        return pq.peek();
+    }
+
+
+    public String huffmanEncoder(String text) {
+
+        Node root = huffmanTreeBuilder(text);
 
         // Traverse the Huffman tree and store the Huffman codes in a map
         Map<Character, String> huffmanCode = new HashMap<>();
@@ -127,28 +135,45 @@ class mazeCompression {
         System.out.println("The original string is: " + text);
 
         // Print encoded string
-        StringBuilder sb = new StringBuilder();
+        StringBuilder encodedStr = new StringBuilder();
+
+        encodedStr.append(huffmanCode);
+        encodedStr.append("\n");
+
         for (char c : text.toCharArray()) {
-            sb.append(huffmanCode.get(c));
+            encodedStr.append(huffmanCode.get(c));
         }
 
-        System.out.println("The encoded string is: " + sb);
-        System.out.print("The decoded string is: ");
+        return encodedStr.toString();
+        //System.out.println("The encoded string is: " + sb);
 
 
-        if (isLeaf(root)) {
-            // Special case: For input like a, aa, aaa, etc.
-            while (root.freq-- > 0) {
-                System.out.print(root.ch);
-            }
-        } else {
-            // Traverse the Huffman Tree again and this time,
-            // decode the encoded string
-            int index = -1;
-            while (index < sb.length() - 1) {
-                index = decode(root, index, sb);
-            }
-        }
+        //System.out.print("The decoded string is: ");
+
+
+        // Traverse the Huffman Tree again and this time,
+        // decode the encoded string
+
+    }
+
+
+    public static String huffmanDecoder(String encodedHuffmanStr) {
+        int index = -1;
+        String decodedStr = "";
+        encodedHuffmanStr.split("\n");
+
+//        Node root = huffmanTreeBuilder(encodedHuffmanStr);
+//
+//
+//        while (index < encodedHuffmanStr.length() - 1) {
+//            index = decode(decodedStr, root, index, encodedHuffmanStr);
+//
+//        }
+
+
+
+
+        return decodedStr;
     }
 
     private String compToStr(Compressor comp) {
@@ -219,7 +244,8 @@ class mazeCompression {
         Compressor retComp = strToComp(huffInputStr);
 
 
-        buildHuffmanTree(huffInputStr);
+        String actualEncoded = huffmanEncoder(huffInputStr);
+        huffmanDecoder(actualEncoded);
 
 
     }
