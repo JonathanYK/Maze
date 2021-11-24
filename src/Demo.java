@@ -13,15 +13,23 @@ public class Demo {
         mazeCompression MC = new mazeCompression();
 
 
-
         // Generating simpleMaze:
         simpleMaze2DGenerator simpleMaze2DGenerator = new simpleMaze2DGenerator();
         maze2d simpleMaze2D = simpleMaze2DGenerator.generate(mazeSize);
         simpleMazeSolved.maze = simpleMaze2D;
         mazeSearchable simpleMS = new mazeSearchable(simpleMaze2D);
 
-        // Compressing:
-        MC.mainHuffman(new Compressor(simpleMaze2D.entrance, simpleMaze2D.exit, simpleMaze2D.mazeSize, simpleMaze2D.mazeStructure));
+
+
+        // Decoding and Saving:
+        String compressedFilename = MC.encodeHuffmanAndSave(simpleMaze2D);
+
+        // Encoding and retrieving:
+        Compressor comp = MC.decodeHuffmanAndSave(compressedFilename);
+        maze2d simpleDecoded = simpleMaze2DGenerator.generate(mazeSize);
+        simpleDecoded.setCustomMaze(comp.structure);
+
+
 
         // Generating myMaze:
         myMaze2DGenerator myMaze2DGenerator = new myMaze2DGenerator();
