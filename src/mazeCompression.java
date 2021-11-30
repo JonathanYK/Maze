@@ -1,10 +1,6 @@
 import java.awt.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 // Huffman tree node:
@@ -32,7 +28,52 @@ class Node {
 
 class mazeCompression {
 
-    public static int mazeCnt = 0;
+    public static int mazeCnt;
+    File mazeCntFile = new File("mazeCnt.bin");
+
+    public mazeCompression() throws IOException {
+
+        // if mazeCnt.txt exists:
+        if (mazeCntFile.exists() && !mazeCntFile.isDirectory()) {
+
+            // read the existing mazeCnt:
+            DataInputStream dis = new DataInputStream(new FileInputStream(mazeCntFile));
+            mazeCnt = dis.read();
+            dis.close();
+        }
+
+        // if mazeCnt.txt not exists:
+        else{
+            // create the file and set the val to 0:
+            boolean mazeCntTxtCreated = mazeCntFile.createNewFile();
+            if (!mazeCntTxtCreated) {
+                throw new IOException("Unable to create mazeCnt file at specified path. Please check that!");
+            }
+
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(mazeCntFile));
+            dos.write(0);
+            dos.close();
+            }
+    }
+
+
+    public int getUpdateMazeCnt() throws IOException {
+
+        // read the value of mazeCntTxt:
+        DataInputStream dis = new DataInputStream(new FileInputStream(mazeCntFile));
+        int updatedMazeCnt = dis.read();
+        dis.close();
+
+        // increment updatedMazeCnt:
+        updatedMazeCnt++;
+
+        // write updatedMazeCnt to mazeCntTxt:
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(mazeCntFile));
+        dos.write(updatedMazeCnt);
+        dos.close();
+
+        return updatedMazeCnt;
+    }
 
     // Traverse huffman tree, then storing codes in a map:
     public static void encode(Node root, String str, Map<Character, String> huffmanCode) {
@@ -82,7 +123,7 @@ class mazeCompression {
         // main looping until last node:
         while (pq.size() != 1) {
 
-            // Remove two nodes with highest priority:
+            // Remove two nodes with highest frequency:
             Node left = pq.poll();
             Node right = pq.poll();
 
@@ -144,23 +185,23 @@ class mazeCompression {
         return decodedStr;
     }
 
-    private String compToStr(Compressor comp) {
+    private String mazeToHuffStr(maze2d maze) {
 
         final StringBuilder sb = new StringBuilder();
 
-        sb.append(comp.entranceX);
+        sb.append(maze.getEntrance().x);
         sb.append(",");
-        sb.append(comp.entranceY);
+        sb.append(maze.getEntrance().y);
         sb.append("-");
-        sb.append(comp.exitX);
+        sb.append(maze.getExit().x);
         sb.append(",");
-        sb.append(comp.exitY);
+        sb.append(maze.getExit().y);
         sb.append("-");
-        sb.append(comp.size);
+        sb.append(maze.mazeSize);
         sb.append("-");
-        for (int i=0; i<comp.structure[0].length; i++) {
-            for (int j = 0; j < comp.structure[1].length; j++) {
-                if (comp.structure[i][j])
+        for (int i = 0; i < maze.mazeStructure[0].length; i++) {
+            for (int j = 0; j < maze.mazeStructure[1].length; j++) {
+                if (maze.mazeStructure[i][j])
                     sb.append(1);
                 else
                     sb.append(0);
@@ -169,25 +210,27 @@ class mazeCompression {
         return sb.toString();
     }
 
-    public Compressor strToComp(String str) {
+    public maze2d huffStrToMaze(String str) {
 
-        String[] splittedStr = str.split("-");
+        String[] splitStr = str.split("-");
 
-        int size = Integer.parseInt(splittedStr[2]);
+        int size = Integer.parseInt(splitStr[2]);
 
         boolean [][] structure = new boolean[size][size];
 
         int structureIdx = 0;
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++) {
-                structure[i][j] = splittedStr[3].charAt(structureIdx) == '1';
+                structure[i][j] = splitStr[3].charAt(structureIdx) == '1';
                 structureIdx++;
             }
         }
 
-        return new Compressor(new Point(Integer.parseInt(splittedStr[0].split(",")[0]),Integer.parseInt(splittedStr[0].split(",")[1])),
-                new Point(Integer.parseInt(splittedStr[1].split(",")[0]), Integer.parseInt(splittedStr[1].split(",")[1])),
-                size,structure);
+        return new maze2d(Integer.parseInt(splitStr[2]),
+                new Point(Integer.parseInt(splitStr[0].split(",")[0]),
+                        Integer.parseInt(splitStr[0].split(",")[1])),
+                new Point(Integer.parseInt(splitStr[1].split(",")[0]),
+                        Integer.parseInt(splitStr[1].split(",")[1])), structure);
     }
 
 
@@ -195,37 +238,33 @@ class mazeCompression {
     // encoding using Huffman and saving the
     public String encodeHuffmanAndSave(maze2d currMaze) throws IOException {
 
-        // Compressor that holds the relevant elements to decode:
-        Compressor comp = new Compressor(currMaze.entrance, currMaze.exit, currMaze.mazeSize, currMaze.mazeStructure);
-        String compressedMazeFilename = currMaze.getClass().getName() + "@" + ++mazeCnt + ".bin";
+        String compressedMazeFilename = currMaze.getClass().getName() + "@" + getUpdateMazeCnt() + ".bin";
 
         // Converting compressor to string and encoding:
-        String huffInputStr = compToStr(comp);
+        String huffInputStr = mazeToHuffStr(currMaze);
         String actualEncoded = huffmanEncoder(huffInputStr);
 
-        FileOutputStream fos = new FileOutputStream(compressedMazeFilename);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        // Creating binary file
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(compressedMazeFilename));
 
-        oos.writeObject(actualEncoded.getBytes(StandardCharsets.UTF_8));
-        oos.close();
+        dos.writeBytes(actualEncoded);
+        dos.close();
 
         return compressedMazeFilename;
     }
 
 
-    public Compressor decodeHuffmanAndSave(String encodedFilename) throws IOException, ClassNotFoundException {
+    public maze2d decodeHuffmanAndSave(String encodedFilename) throws IOException {
 
         String actualDecoded;
+        DataInputStream ois = new DataInputStream(new FileInputStream(encodedFilename));
 
-        FileInputStream fis = new FileInputStream(encodedFilename);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-
-        byte[] binData = (byte[]) ois.readObject();
+        byte[] binData = ois.readAllBytes();
         String retrievedString = new String(binData);
         ois.close();
 
         actualDecoded = huffmanDecoder(retrievedString);
 
-        return strToComp(actualDecoded);
+        return huffStrToMaze(actualDecoded);
     }
 }

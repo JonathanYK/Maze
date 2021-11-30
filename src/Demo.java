@@ -25,9 +25,9 @@ public class Demo {
         String compressedFilename = MC.encodeHuffmanAndSave(simpleMaze2D);
 
         // Encoding and retrieving:
-        Compressor comp = MC.decodeHuffmanAndSave(compressedFilename);
+        maze2d encodedMaze2d = MC.decodeHuffmanAndSave(compressedFilename);
         maze2d simpleDecoded = simpleMaze2DGenerator.generate(mazeSize);
-        simpleDecoded.setCustomMaze(comp.structure);
+        simpleDecoded.setCustomMaze(encodedMaze2d.mazeStructure);
 
 
 

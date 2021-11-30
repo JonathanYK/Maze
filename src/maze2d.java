@@ -8,6 +8,15 @@ public class maze2d {
     Point entrance;
     Point exit;
 
+    public maze2d(int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
+
+        this.mazeSize = mazeSize;
+        this.entrance = entrance;
+        this.exit = exit;
+        this.mazeStructure = mazeStructure;
+    }
+
+
     public maze2d(int mazeSize) {
 
         // initiating maze structure (default params are false):
@@ -22,14 +31,16 @@ public class maze2d {
         this.exit = new Point(mazeSize - 1, mazeSize - 1);
     }
 
-    public Point getEntrance() { return entrance; }
+    public Point getEntrance() {
+        return entrance;
+    }
 
     public Point getExit() {
         return exit;
     }
 
 
-    public void setCustomMaze (boolean[][] customMaze) {
+    public void setCustomMaze(boolean[][] customMaze) {
         this.mazeStructure = customMaze;
     }
 
@@ -51,32 +62,30 @@ public class maze2d {
         ArrayList<Point> possibleSteps = new ArrayList<>();
 
         // North move:
-        if (currPoint.x != 0 ) {
+        if (currPoint.x != 0) {
             if (ignoreWalls || this.mazeStructure[currPoint.x - 1][currPoint.y])
                 possibleSteps.add(new Point(currPoint.x - 1, currPoint.y));
         }
 
         // South move:
-        if (currPoint.x < this.mazeSize-1) {
+        if (currPoint.x < this.mazeSize - 1) {
             if (ignoreWalls || this.mazeStructure[currPoint.x + 1][currPoint.y])
                 possibleSteps.add(new Point(currPoint.x + 1, currPoint.y));
         }
 
         // West move:
-        if (currPoint.y != 0 ) {
+        if (currPoint.y != 0) {
             if (ignoreWalls || this.mazeStructure[currPoint.x][currPoint.y - 1])
                 possibleSteps.add(new Point(currPoint.x, currPoint.y - 1));
         }
 
         // East move:
-        if (currPoint.y < this.mazeSize-1) {
+        if (currPoint.y < this.mazeSize - 1) {
             if (ignoreWalls || this.mazeStructure[currPoint.x][currPoint.y + 1])
                 possibleSteps.add(new Point(currPoint.x, currPoint.y + 1));
         }
         return possibleSteps;
     }
-
-
 
     @Override
     public String toString() {
