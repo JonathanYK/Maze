@@ -1,3 +1,5 @@
+package controller;
+
 import java.util.*;
 
 public class myMaze2DGenerator extends abstractMaze2DGenerator {

@@ -1,3 +1,13 @@
+package controller;
+
+import view.CLI;
+import view.userCommands;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class Demo {
 
     public static void main(String[] args) throws Exception {
@@ -12,6 +22,19 @@ public class Demo {
 
         mazeCompression MC = new mazeCompression();
 
+
+        //-------------------------------------------------------------
+
+
+
+        userCommands uc = new userCommands();
+        CLI cli = new CLI();
+        cli.start(uc);
+
+
+        //TODO: ADD AUTOCOMPLETE?
+
+        //-------------------------------------------------------------
 
         // Generating simpleMaze:
         simpleMaze2DGenerator simpleMaze2DGenerator = new simpleMaze2DGenerator();
@@ -46,26 +69,26 @@ public class Demo {
         System.out.println(myMaze2D);
 
 
-        // Solving simpleMaze searchable using BFS:
+        // Solving simpleMaze searchable using controller.BFS:
         simpleMazeSolved.BFS = bfsClass.search(simpleMS);
-        System.out.println("\nsimpleMaze2dSearchable BFS:\n" + simpleMazeSolved.BFS.getSolution());
+        System.out.println("\nsimpleMaze2dSearchable controller.BFS:\n" + simpleMazeSolved.BFS.getSolution());
 
-        // Solving myMaze searchable using BFS:
+        // Solving myMaze searchable using controller.BFS:
         myMazeSolved.BFS = bfsClass.search(myMS);
-        System.out.println("\nmyMaze2dSearchable BFS:\n" + myMazeSolved.BFS.getSolution());
+        System.out.println("\nmyMaze2dSearchable controller.BFS:\n" + myMazeSolved.BFS.getSolution());
 
 
         // Solving simpleMaze using A Star:
         simpleMazeSolved.ASTAR = astarClass.search(simpleMS);
-        System.out.println("\nsimpleMaze2dSearchable ASTAR:\n" + simpleMazeSolved.ASTAR.getSolution());
+        System.out.println("\nsimpleMaze2dSearchable controller.ASTAR:\n" + simpleMazeSolved.ASTAR.getSolution());
 
         // Solving myMaze using A Star:
         myMazeSolved.ASTAR = astarClass.search(myMS);
-        System.out.println("\nmyMaze2dSearchable ASTAR:\n" +  myMazeSolved.ASTAR.getSolution());
+        System.out.println("\nmyMaze2dSearchable controller.ASTAR:\n" +  myMazeSolved.ASTAR.getSolution());
 
 
-        System.out.println("\nBFS evaluation amount: " + bfsClass.getPointEvaluationAmount());
-        System.out.println("ASTAR evaluation amount: " + astarClass.getPointEvaluationAmount());
+        System.out.println("\ncontroller.BFS evaluation amount: " + bfsClass.getPointEvaluationAmount());
+        System.out.println("controller.ASTAR evaluation amount: " + astarClass.getPointEvaluationAmount());
 
 //        // simpleMaze printing of entrance,exit and available moves:
 //        System.out.println("\nsimpleMaze entrance position: " + simpleMaze2D.getEntrance().toString());

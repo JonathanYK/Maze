@@ -1,3 +1,5 @@
+package controller;
+
 public class mazePoint {
     private int x;
     private int y;
@@ -36,7 +38,7 @@ public class mazePoint {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("\nmazePoint: [");
+        sb.append("\ncontroller.mazePoint: [");
         sb.append(this.getX());
         sb.append("][");
         sb.append(this.getY());

@@ -1,4 +1,5 @@
-import java.awt.*;
+package controller;
+
 import java.util.ArrayList;
 
 public class State {

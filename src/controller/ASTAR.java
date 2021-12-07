@@ -1,3 +1,5 @@
+package controller;
+
 import java.util.ArrayList;
 
 public class ASTAR extends CommonSearcher {
@@ -30,7 +32,7 @@ public class ASTAR extends CommonSearcher {
 
             State currState = StatesOpenedPool.get(0);
 
-            // finding the best next point - with the best fCost (or hCost if 4 = {State@882} there is more then one point with best fCost)
+            // finding the best next point - with the best fCost (or hCost if 4 = {controller.State@882} there is more then one point with best fCost)
             // TODO: replace with minStarpoint method
 
             for (int i = 1; i <= StatesOpenedPool.size() - 1; i++) {

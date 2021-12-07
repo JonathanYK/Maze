@@ -1,3 +1,5 @@
+package controller;
+
 public abstract class abstractMaze2DGenerator implements maze2dGenerator {
 
     // Measuring generating algorithm execution time, returning millis as String

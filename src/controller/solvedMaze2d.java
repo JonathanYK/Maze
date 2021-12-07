@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package controller;
 
 public class solvedMaze2d {
 

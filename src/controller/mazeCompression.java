@@ -1,3 +1,5 @@
+package controller;
+
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -238,7 +240,7 @@ class mazeCompression {
     // encoding using Huffman and saving the
     public String encodeHuffmanAndSave(maze2d currMaze) throws IOException {
 
-        String compressedMazeFilename = currMaze.getClass().getName() + "@" + getUpdateMazeCnt() + ".bin";
+        String compressedMazeFilename = currMaze.getClass().getSimpleName() + "@" + getUpdateMazeCnt() + ".bin";
 
         // Converting compressor to string and encoding:
         String huffInputStr = mazeToHuffStr(currMaze);

@@ -1,3 +1,5 @@
+package controller;
+
 import java.awt.*;
 import java.util.ArrayList;
 

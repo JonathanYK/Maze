@@ -1,8 +1,11 @@
+package controller;
+
 import java.awt.*;
 import java.util.*;
 
 public class maze2d {
 
+    String mazeName = null;
     int mazeSize;
     boolean[][] mazeStructure;
     Point entrance;
@@ -29,6 +32,15 @@ public class maze2d {
 
         // default exit is the bottom right corner:
         this.exit = new Point(mazeSize - 1, mazeSize - 1);
+    }
+
+
+    public void setMazeName(String newMazeName) {
+        this.mazeName = newMazeName;
+    }
+
+    public String getMazeName() {
+        return this.mazeName;
     }
 
     public Point getEntrance() {
