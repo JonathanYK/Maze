@@ -11,8 +11,9 @@ public class maze2d {
     Point entrance;
     Point exit;
 
-    public maze2d(int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
+    public maze2d(String mazeName, int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
 
+        this.mazeName = mazeName;
         this.mazeSize = mazeSize;
         this.entrance = entrance;
         this.exit = exit;
@@ -38,6 +39,8 @@ public class maze2d {
     public void setMazeName(String newMazeName) {
         this.mazeName = newMazeName;
     }
+
+    public boolean[][] getMazeStructure() { return this.mazeStructure; }
 
     public String getMazeName() {
         return this.mazeName;

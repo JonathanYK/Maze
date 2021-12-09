@@ -3,11 +3,6 @@ package controller;
 import view.CLI;
 import view.userCommands;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 public class Demo {
 
     public static void main(String[] args) throws Exception {
@@ -28,11 +23,12 @@ public class Demo {
 
 
         userCommands uc = new userCommands();
+
+        //CLI cli = new CLI("is.txt", "os.txt");
         CLI cli = new CLI();
+
         cli.start(uc);
 
-
-        //TODO: ADD AUTOCOMPLETE?
 
         //-------------------------------------------------------------
 
@@ -48,7 +44,7 @@ public class Demo {
         String compressedFilename = MC.encodeHuffmanAndSave(simpleMaze2D);
 
         // Encoding and retrieving:
-        maze2d encodedMaze2d = MC.decodeHuffmanAndSave(compressedFilename);
+        maze2d encodedMaze2d = MC.decodeHuffmanMazeFileToMaze(compressedFilename);
         maze2d simpleDecoded = simpleMaze2DGenerator.generate(mazeSize);
         simpleDecoded.setCustomMaze(encodedMaze2d.mazeStructure);
 

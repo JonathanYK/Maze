@@ -2,22 +2,12 @@ package view;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class CLI {
 
     InputStream is;
     OutputStream os;
-    Scanner sc;
-
-    String isStr;
-    String osStr;
-
 
     // default constructor with default IOstreanms (console IO):
     public CLI() {
@@ -26,23 +16,20 @@ public class CLI {
     }
 
 
-    public CLI(InputStream is, OutputStream os) {
+    public CLI(String inputFileStr, String outputFileStr) throws IOException {
 
-        this.os = os;
-        this.is = is;
-        sc = new Scanner(is, StandardCharsets.UTF_8.name());
+        File initialFile = new File(inputFileStr);
+        this.is = new FileInputStream(initialFile);
 
+        File osFile = new File(outputFileStr);
 
-        // in case the inputStream is a path to a file and not a command:
-        if (!isStr.contains("\n") && !isStr.contains(" ") && Files.exists(Paths.get(isStr))) {
-
-            //TODO: Catch the exception of Files.exists instead of above if
-            System.out.println("commands from path!");
+        // check if concat or rewrite the file:
+        boolean fileCreated = osFile.createNewFile();
+        if (!fileCreated) {
+            throw new IOException("Unable to create file at specified path. It already exists");
         }
 
-
-        // any other inputstreams should be defined by another if's..
-
+        this.os = new FileOutputStream(osFile, false);
 
     }
 
@@ -51,19 +38,29 @@ public class CLI {
     public void start(userCommands uc) throws IOException, ClassNotFoundException {
         Scanner sc = new Scanner(this.is);
 
+        os.write("-------------------------".getBytes(StandardCharsets.UTF_8));
+        os.write("\nWELCOME TO MAZES CLI\n\n".getBytes(StandardCharsets.UTF_8));
+        os.write("Available commands:".getBytes(StandardCharsets.UTF_8));
+        os.write(uc.getAllCommandNames().getBytes(StandardCharsets.UTF_8));
+        os.write("-------------------------\n".getBytes(StandardCharsets.UTF_8));
+
 
         while (true) {
 
             String cmd = sc.next();
             String params = sc.next();
-            String retStr = "";
+            String retStr;
+
 
             if (uc.isValidCommand(cmd)) {
                 retStr = uc.getCommand(cmd).doCommand(params);
-                System.out.println(retStr);
+                // if retstr == exit... exception.
+
+                os.write((retStr +"\n").getBytes(StandardCharsets.UTF_8));
             }
+
             else {
-                System.out.println("Wrong command provided!");
+                os.write(("Wrong command provided!").getBytes(StandardCharsets.UTF_8));
             }
 
         }
