@@ -9,36 +9,12 @@ import java.util.*;
 import controller.*;
 
 
-public class userCommands {
+public class mazeUserCommands extends userCommandsAbc {
 
-    //TODO: While MVCing - split to userCommands interface, userCommands abs class then mazeUserCommands
     private ArrayList<maze2d> generatedMazes = new ArrayList<>();
 
-    // hashmap that holds all the created commands:
-    private HashMap<String, Command> commands = new HashMap<>();
-
-    public userCommands(HashMap<String, Command> commands) {
-        this.commands = commands;
-    }
-
-    public void putCommand(String string, Command command) {
-        commands.put(string, command);
-    }
-
-    public void clearCommands() {
-        commands.clear();
-    }
-
-    public String getAllCommandNames() {
-        StringBuilder retStrbld = new StringBuilder();
-        for (String str: commands.keySet()) {
-            retStrbld.append(str).append("\n");
-        }
-        return retStrbld.toString();
-    }
-
     public void addGeneratedMazesPath(maze2d genMaze) {
-        generatedMazes.add(genMaze);
+        this.generatedMazes.add(genMaze);
     }
 
     public maze2d getGeneratedMaze(String desiredMazeName) {
@@ -58,25 +34,17 @@ public class userCommands {
         }
     }
 
+    public mazeUserCommands() {
+        super();
+        this.putCommand("dir", new dirCommand());
+        this.putCommand("genmaze", new generateCommand());
+        this.putCommand("display", new mdisplayCommand());
+        this.putCommand("savemaze", new saveCommand());
+        this.putCommand("loadmaze", new loadCommand());
+        this.putCommand("mazesize", new msizeCommand());
+        this.putCommand("filesize", new fsizeCommand());
+        this.putCommand("exit", new exitCommand());
 
-    public userCommands() {
-        commands.put("dir", new dirCommand());
-        commands.put("genmaze", new generateCommand());
-        commands.put("display", new mdisplayCommand());
-        commands.put("savemaze", new saveCommand());
-        commands.put("loadmaze", new loadCommand());
-        commands.put("mazesize", new msizeCommand());
-        commands.put("filesize", new fsizeCommand());
-        commands.put("exit", new exitCommand());
-
-    }
-
-    public Command getCommand(String commandName) {
-        return commands.get(commandName);
-    }
-
-    public boolean isValidCommand(String providedCommand) {
-        return commands.containsKey(providedCommand);
     }
 
 
@@ -110,40 +78,32 @@ public class userCommands {
         public String doCommand(String genParams) {
 
             ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(genParams.split("-")));
+            maze2dGenerator maze2DGenerator;
 
             // validate the maze size is int:
-            //TODO: REMOVE REGEX with isInt:
-            if (genParamsLst.get(2).matches("-?\\d+")) {
-
-                if (genParamsLst.get(0).equals("simplemaze")) {
-                    maze2dGenerator simpleMaze2DGenerator = new simpleMaze2DGenerator();
-
-                    // TODO: combine with the second maze kind
-                    maze2d simpleMaze2D = simpleMaze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
-
-                    //TODO: change sout to os maybe on MVC
-                    simpleMaze2D.setMazeName(genParamsLst.get(1));
-                    addGeneratedMazesPath(simpleMaze2D);
-                    return genParamsLst.get(1) + " simplemaze generated!";
-
-
-                } else if (genParamsLst.get(0).equals("mymaze")) {
-                    maze2dGenerator myMaze2DGenerator = new myMaze2DGenerator();
-
-
-                    // TODO: combine with the second maze kind:
-                    maze2d myMaze2D = myMaze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
-
-                    //TODO: change sout to os: maybe on MVC
-                    myMaze2D.setMazeName(genParamsLst.get(1));
-                    addGeneratedMazesPath(myMaze2D);
-                    return genParamsLst.get(1) + " mymaze generated!";
-
-                } else {
-                    return "Wrong maze type!";
-                }
+            try {
+                Integer.parseInt(genParamsLst.get(2));
+            } catch (NumberFormatException nfe) {
+                return "genmaze recieved not a number value, aborted!";
             }
-            return "";
+
+            if (genParamsLst.get(0).equals("simplemaze")) {
+                maze2DGenerator = new simpleMaze2DGenerator();
+            }
+
+             else if (genParamsLst.get(0).equals("mymaze")) {
+                maze2DGenerator = new myMaze2DGenerator();
+            }
+
+            else {
+                return "Wrong maze type!";
+            }
+
+                maze2d genMaze2D = maze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
+                genMaze2D.setMazeName(genParamsLst.get(1));
+                addGeneratedMazesPath(genMaze2D);
+                return genParamsLst.get(1) + " " + genParamsLst.get(0) + " generated!";
+
         }
     }
 
@@ -225,9 +185,6 @@ public class userCommands {
         }
     }
 
-
-    // NOT SURE ABOUT THIS METHOD:
-
     private class exitCommand implements Command {
 
         @Override
@@ -238,9 +195,5 @@ public class userCommands {
             return "";
         }
     }
-
-
-
-
 }
 

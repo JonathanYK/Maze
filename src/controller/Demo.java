@@ -1,7 +1,7 @@
 package controller;
 
 import view.CLI;
-import view.userCommands;
+import view.mazeUserCommands;
 
 public class Demo {
 
@@ -18,26 +18,22 @@ public class Demo {
         mazeCompression MC = new mazeCompression();
 
 
-        //-------------------------------------------------------------
 
+        mazeUserCommands uc = new mazeUserCommands();
 
-
-        userCommands uc = new userCommands();
-
+        // IS is from/to a specific file:
         //CLI cli = new CLI("is.txt", "os.txt");
-        CLI cli = new CLI();
 
+        // IS is from the terminal:
+        CLI cli = new CLI();
         cli.start(uc);
 
-
-        //-------------------------------------------------------------
 
         // Generating simpleMaze:
         simpleMaze2DGenerator simpleMaze2DGenerator = new simpleMaze2DGenerator();
         maze2d simpleMaze2D = simpleMaze2DGenerator.generate(mazeSize);
         simpleMazeSolved.maze = simpleMaze2D;
         mazeSearchable simpleMS = new mazeSearchable(simpleMaze2D);
-
 
 
         // Decoding and Saving:
@@ -86,21 +82,9 @@ public class Demo {
         System.out.println("\ncontroller.BFS evaluation amount: " + bfsClass.getPointEvaluationAmount());
         System.out.println("controller.ASTAR evaluation amount: " + astarClass.getPointEvaluationAmount());
 
-//        // simpleMaze printing of entrance,exit and available moves:
-//        System.out.println("\nsimpleMaze entrance position: " + simpleMaze2D.getEntrance().toString());
-//        System.out.println("\nsimpleMaze exit position: " + simpleMaze2D.getExit().toString());
-//        simpleMaze2D.getAvailableMoves(simpleMaze2D.entrance);
-//
-//
-//        // myMaze printing of entrance,exit and available moves:
-//        System.out.println("\nmyMaze maze entrance position: " + myMaze2D.getEntrance().toString());
-//        System.out.println("\nmyMaze maze exit position: " + myMaze2D.getExit().toString());
-//        myMaze2D.getAvailableMoves(myMaze2D.entrance, myMaze2D.structure);
-
 
     }
 }
-
 
 
 

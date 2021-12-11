@@ -35,7 +35,7 @@ public class CLI {
 
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void start(userCommands uc) throws IOException, ClassNotFoundException {
+    public void start(mazeUserCommands uc) throws IOException, ClassNotFoundException {
         Scanner sc = new Scanner(this.is);
 
         os.write("-------------------------".getBytes(StandardCharsets.UTF_8));
@@ -54,15 +54,11 @@ public class CLI {
 
             if (uc.isValidCommand(cmd)) {
                 retStr = uc.getCommand(cmd).doCommand(params);
-                // if retstr == exit... exception.
-
                 os.write((retStr +"\n").getBytes(StandardCharsets.UTF_8));
             }
-
             else {
                 os.write(("Wrong command provided!").getBytes(StandardCharsets.UTF_8));
             }
-
         }
     }
 }
