@@ -9,16 +9,16 @@ import java.util.*;
 import controller.*;
 
 
-public class mazeUserCommands extends userCommandsAbc {
+public class MazeIUserCommands extends IUserCommandsAbc {
 
-    private ArrayList<maze2d> generatedMazes = new ArrayList<>();
+    private ArrayList<Maze2d> generatedMazes = new ArrayList<>();
 
-    public void addGeneratedMazesPath(maze2d genMaze) {
+    public void addGeneratedMazesPath(Maze2d genMaze) {
         this.generatedMazes.add(genMaze);
     }
 
-    public maze2d getGeneratedMaze(String desiredMazeName) {
-        for (maze2d maze : generatedMazes) {
+    public Maze2d getGeneratedMaze(String desiredMazeName) {
+        for (Maze2d maze : generatedMazes) {
             if (maze.getMazeName().equals(desiredMazeName))
                 return maze;
         }
@@ -26,7 +26,7 @@ public class mazeUserCommands extends userCommandsAbc {
     }
 
     public void removeGeneratedMaze(String mazeName) {
-        for (maze2d maze : generatedMazes) {
+        for (Maze2d maze : generatedMazes) {
             if (maze.getMazeName().equals(mazeName)) {
                 generatedMazes.remove(maze);
                 return;
@@ -34,23 +34,23 @@ public class mazeUserCommands extends userCommandsAbc {
         }
     }
 
-    public mazeUserCommands() {
+    public MazeIUserCommands() {
         super();
-        this.putCommand("dir", new dirCommand());
-        this.putCommand("genmaze", new generateCommand());
-        this.putCommand("display", new mdisplayCommand());
-        this.putCommand("savemaze", new saveCommand());
-        this.putCommand("loadmaze", new loadCommand());
-        this.putCommand("mazesize", new msizeCommand());
-        this.putCommand("filesize", new fsizeCommand());
-        this.putCommand("exit", new exitCommand());
+        this.putCommand("dir", new dirICommand());
+        this.putCommand("genmaze", new generateICommand());
+        this.putCommand("display", new mdisplayICommand());
+        this.putCommand("savemaze", new saveICommand());
+        this.putCommand("loadmaze", new loadICommand());
+        this.putCommand("mazesize", new msizeICommand());
+        this.putCommand("filesize", new fsizeICommand());
+        this.putCommand("exit", new exitICommand());
 
     }
 
 
     // this method will print full path of the file in case file name provided as path, otherwise return all the files
     // in provided path:
-    private class dirCommand implements Command {
+    private class dirICommand implements ICommand {
         @Override
         public String doCommand(String path) throws IOException {
 
@@ -72,13 +72,13 @@ public class mazeUserCommands extends userCommandsAbc {
 
     // generating mazes of kind/new maze name/ maze size
     // example: genmaze simplemaze-mazeName-mazeSize
-    private class generateCommand implements Command {
+    private class generateICommand implements ICommand {
 
         @Override
         public String doCommand(String genParams) {
 
             ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(genParams.split("-")));
-            maze2dGenerator maze2DGenerator;
+            IMaze2dGenerator imaze2DGenerator;
 
             // validate the maze size is int:
             try {
@@ -88,18 +88,18 @@ public class mazeUserCommands extends userCommandsAbc {
             }
 
             if (genParamsLst.get(0).equals("simplemaze")) {
-                maze2DGenerator = new simpleMaze2DGenerator();
+                imaze2DGenerator = new SimpleIIMaze2DGenerator();
             }
 
              else if (genParamsLst.get(0).equals("mymaze")) {
-                maze2DGenerator = new myMaze2DGenerator();
+                imaze2DGenerator = new MyIIMaze2DGenerator();
             }
 
             else {
                 return "Wrong maze type!";
             }
 
-                maze2d genMaze2D = maze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
+                Maze2d genMaze2D = imaze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
                 genMaze2D.setMazeName(genParamsLst.get(1));
                 addGeneratedMazesPath(genMaze2D);
                 return genParamsLst.get(1) + " " + genParamsLst.get(0) + " generated!";
@@ -107,7 +107,7 @@ public class mazeUserCommands extends userCommandsAbc {
         }
     }
 
-        private class mdisplayCommand implements Command {
+        private class mdisplayICommand implements ICommand {
             @Override
             public String doCommand(String command) {
 
@@ -118,7 +118,7 @@ public class mazeUserCommands extends userCommandsAbc {
                 boolean allMazes = commandLst.get(0).equals("mazes") || commandLst.get(0).equals("all");
 
                 if (allMazes) {
-                    for (maze2d maze : generatedMazes) {
+                    for (Maze2d maze : generatedMazes) {
                         retStr.append(maze.getMazeName()).append("\n");
                     }
                 }
@@ -132,12 +132,12 @@ public class mazeUserCommands extends userCommandsAbc {
         }
 
         // save compressed maze binary file from already generated mazes:
-        private class saveCommand implements Command {
+        private class saveICommand implements ICommand {
 
             @Override
             public String doCommand(String mazeName) throws IOException {
 
-                mazeCompression MC = new mazeCompression();
+                MazeCompression MC = new MazeCompression();
 
                 String retSaveMazeStr = MC.encodeHuffmanAndSave(getGeneratedMaze(mazeName), mazeName);
                 if (retSaveMazeStr.equals(mazeName + ".bin")) {
@@ -151,31 +151,31 @@ public class mazeUserCommands extends userCommandsAbc {
         }
 
     // load compressed maze from file and add it to dynamically generatedMazesPaths
-    private class loadCommand implements Command {
+    private class loadICommand implements ICommand {
 
         @Override
         public String doCommand(String path) throws IOException {
 
-            mazeCompression MC = new mazeCompression();
-            maze2d encodedMaze2d = MC.decodeHuffmanMazeFileToMaze(path);
-            generatedMazes.add(encodedMaze2d);
+            MazeCompression MC = new MazeCompression();
+            Maze2d encodedMaze2D = MC.decodeHuffmanMazeFileToMaze(path);
+            generatedMazes.add(encodedMaze2D);
 
-            return encodedMaze2d.getMazeName() + " loaded!";
+            return encodedMaze2D.getMazeName() + " loaded!";
         }
     }
 
     // get size of the maze before compression:
-    private class msizeCommand implements Command {
+    private class msizeICommand implements ICommand {
 
         @Override
         public String doCommand(String mazeName) {
-           maze2d d = getGeneratedMaze(mazeName);
+           Maze2d d = getGeneratedMaze(mazeName);
 
             return "maze size before compression: " + (d.getMazeStructure()[0].length * d.getMazeStructure().length);
         }
     }
 
-    private class fsizeCommand implements Command {
+    private class fsizeICommand implements ICommand {
 
         @Override
         public String doCommand(String path) throws IOException {
@@ -185,7 +185,7 @@ public class mazeUserCommands extends userCommandsAbc {
         }
     }
 
-    private class exitCommand implements Command {
+    private class exitICommand implements ICommand {
 
         @Override
         public String doCommand(String path)  {

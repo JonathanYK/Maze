@@ -39,27 +39,27 @@ public class State {
 
 
     private ArrayList<Integer> getStatesCoordinates (State currState, State destState) {
-        ArrayList<Integer> coordinatesStates = new ArrayList<>();
+        ArrayList<Integer> _coordinatesStates = new ArrayList<>();
 
         // currStateX:
-        coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[0]
+        _coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[0]
                 .replace("[", "").substring(2)));
 
         //currStateY:
-        coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[1]
+        _coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[1]
                 .replace("[", "").replace("]","").substring(2)));
 
 
         //destStateX:
-        coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[0]
+        _coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[0]
                 .replace("[", "").substring(2)));
 
         //destStateY:
-        coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[1]
+        _coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[1]
                 .replace("[", "").replace("]","").substring(2)));
 
 
-        return coordinatesStates;
+        return _coordinatesStates;
     }
 
 

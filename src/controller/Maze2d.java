@@ -3,7 +3,7 @@ package controller;
 import java.awt.*;
 import java.util.*;
 
-public class maze2d {
+public class Maze2d {
 
     String mazeName = null;
     int mazeSize;
@@ -11,7 +11,7 @@ public class maze2d {
     Point entrance;
     Point exit;
 
-    public maze2d(String mazeName, int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
+    public Maze2d(String mazeName, int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
 
         this.mazeName = mazeName;
         this.mazeSize = mazeSize;
@@ -21,7 +21,7 @@ public class maze2d {
     }
 
 
-    public maze2d(int mazeSize) {
+    public Maze2d(int mazeSize) {
 
         // initiating maze structure (default params are false):
         this.mazeStructure = new boolean[mazeSize][mazeSize];
@@ -55,7 +55,11 @@ public class maze2d {
     }
 
 
-    public void setCustomMaze(boolean[][] customMaze) {
+    public void setCustomMaze(boolean[][] customMaze) throws Exception {
+
+        if (customMaze[0].length != this.mazeSize || customMaze[1].length != this.mazeSize)
+            throw new Exception("Maze structure isn't equal to the maze size!");
+
         this.mazeStructure = customMaze;
     }
 

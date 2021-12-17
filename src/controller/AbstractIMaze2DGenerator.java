@@ -1,13 +1,13 @@
 package controller;
 
-public abstract class abstractMaze2DGenerator implements maze2dGenerator {
+public abstract class AbstractIMaze2DGenerator implements IMaze2dGenerator {
 
     // Measuring generating algorithm execution time, returning millis as String
-    public String measureAlgorithmTime(int mazeSize) throws mazeSizeException {
+    public String measureAlgorithmTime(int mazeSize) throws MazeSizeException {
         String retStr;
 
         if (mazeSize < 3) {
-            throw new mazeSizeException("maze size has to be bigger then 2");
+            throw new MazeSizeException("maze size has to be bigger then 2");
         }
         long startMeasuringTime = System.currentTimeMillis();
         generate(mazeSize);

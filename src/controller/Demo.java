@@ -1,86 +1,87 @@
 package controller;
 
 import view.CLI;
-import view.mazeUserCommands;
+import view.MazeIUserCommands;
 
 public class Demo {
 
     public static void main(String[] args) throws Exception {
 
-        int mazeSize = 11;
+        BFS _bfsClass = new BFS();
+        ASTAR _ASTARClass = new ASTAR();
 
-        BFS bfsClass = new BFS();
-        ASTAR astarClass = new ASTAR();
+        SolvedMaze2d _simpleMazeSolved = new SolvedMaze2d();
+        SolvedMaze2d _myMazeSolved = new SolvedMaze2d();
 
-        solvedMaze2d simpleMazeSolved = new solvedMaze2d();
-        solvedMaze2d myMazeSolved = new solvedMaze2d();
-
-        mazeCompression MC = new mazeCompression();
+        MazeCompression _MC = new MazeCompression();
 
 
 
-        mazeUserCommands uc = new mazeUserCommands();
+        MazeIUserCommands _uc = new MazeIUserCommands();
 
         // IS is from/to a specific file:
-        //CLI cli = new CLI("is.txt", "os.txt");
+//        CLI _cli = new CLI("is.txt", "os.txt");
+//        _cli.start(_uc);
 
         // IS is from the terminal:
-        CLI cli = new CLI();
-        cli.start(uc);
+        CLI _cli = new CLI();
+        _cli.start(_uc);
 
+
+        int mazeSize = 11;
 
         // Generating simpleMaze:
-        simpleMaze2DGenerator simpleMaze2DGenerator = new simpleMaze2DGenerator();
-        maze2d simpleMaze2D = simpleMaze2DGenerator.generate(mazeSize);
-        simpleMazeSolved.maze = simpleMaze2D;
-        mazeSearchable simpleMS = new mazeSearchable(simpleMaze2D);
+        SimpleIIMaze2DGenerator _simpleMaze2DGenerator = new SimpleIIMaze2DGenerator();
+        Maze2d simpleMaze2D = _simpleMaze2DGenerator.generate(mazeSize);
+        _simpleMazeSolved._maze = simpleMaze2D;
+        MazeISearchable _simpleMS = new MazeISearchable(simpleMaze2D);
 
 
         // Decoding and Saving:
-        String compressedFilename = MC.encodeHuffmanAndSave(simpleMaze2D);
+        String compressedFilename = _MC.encodeHuffmanAndSave(simpleMaze2D);
 
         // Encoding and retrieving:
-        maze2d encodedMaze2d = MC.decodeHuffmanMazeFileToMaze(compressedFilename);
-        maze2d simpleDecoded = simpleMaze2DGenerator.generate(mazeSize);
-        simpleDecoded.setCustomMaze(encodedMaze2d.mazeStructure);
+        Maze2d encodedMaze2D = _MC.decodeHuffmanMazeFileToMaze(compressedFilename);
+        Maze2d simpleDecoded = _simpleMaze2DGenerator.generate(mazeSize);
+        simpleDecoded.setCustomMaze(encodedMaze2D.mazeStructure);
 
 
 
         // Generating myMaze:
-        myMaze2DGenerator myMaze2DGenerator = new myMaze2DGenerator();
-        maze2d myMaze2D = myMaze2DGenerator.generate(mazeSize);
-        myMazeSolved.maze = myMaze2D;
-        mazeSearchable myMS = new mazeSearchable(myMaze2D);
+        MyIIMaze2DGenerator _myMaze2DGenerator = new MyIIMaze2DGenerator();
+        Maze2d myMaze2D = _myMaze2DGenerator.generate(mazeSize);
+        _myMazeSolved._maze = myMaze2D;
+        MazeISearchable _myMS = new MazeISearchable(myMaze2D);
 
         // Measuring and printing simpleMaze
-        System.out.println(simpleMaze2DGenerator.measureAlgorithmTime(mazeSize));
+        System.out.println(_simpleMaze2DGenerator.measureAlgorithmTime(mazeSize));
         System.out.println(simpleMaze2D);
 
         // Measuring and printing myMaze:
-        System.out.println(myMaze2DGenerator.measureAlgorithmTime(mazeSize));
+        System.out.println(_myMaze2DGenerator.measureAlgorithmTime(mazeSize));
         System.out.println(myMaze2D);
 
 
         // Solving simpleMaze searchable using controller.BFS:
-        simpleMazeSolved.BFS = bfsClass.search(simpleMS);
-        System.out.println("\nsimpleMaze2dSearchable controller.BFS:\n" + simpleMazeSolved.BFS.getSolution());
+        _simpleMazeSolved._BFS = _bfsClass.search(_simpleMS);
+        System.out.println("\nsimpleMaze2dSearchable controller.BFS:\n" + _simpleMazeSolved._BFS.getSolution());
 
         // Solving myMaze searchable using controller.BFS:
-        myMazeSolved.BFS = bfsClass.search(myMS);
-        System.out.println("\nmyMaze2dSearchable controller.BFS:\n" + myMazeSolved.BFS.getSolution());
+        _myMazeSolved._BFS = _bfsClass.search(_myMS);
+        System.out.println("\nmyMaze2dSearchable controller.BFS:\n" + _myMazeSolved._BFS.getSolution());
 
 
         // Solving simpleMaze using A Star:
-        simpleMazeSolved.ASTAR = astarClass.search(simpleMS);
-        System.out.println("\nsimpleMaze2dSearchable controller.ASTAR:\n" + simpleMazeSolved.ASTAR.getSolution());
+        _simpleMazeSolved._ASTAR = _ASTARClass.search(_simpleMS);
+        System.out.println("\nsimpleMaze2dSearchable controller.ASTAR:\n" + _simpleMazeSolved._ASTAR.getSolution());
 
         // Solving myMaze using A Star:
-        myMazeSolved.ASTAR = astarClass.search(myMS);
-        System.out.println("\nmyMaze2dSearchable controller.ASTAR:\n" +  myMazeSolved.ASTAR.getSolution());
+        _myMazeSolved._ASTAR = _ASTARClass.search(_myMS);
+        System.out.println("\nmyMaze2dSearchable controller.ASTAR:\n" +  _myMazeSolved._ASTAR.getSolution());
 
 
-        System.out.println("\ncontroller.BFS evaluation amount: " + bfsClass.getPointEvaluationAmount());
-        System.out.println("controller.ASTAR evaluation amount: " + astarClass.getPointEvaluationAmount());
+        System.out.println("\ncontroller.BFS evaluation amount: " + _bfsClass.getPointEvaluationAmount());
+        System.out.println("controller.ASTAR evaluation amount: " + _ASTARClass.getPointEvaluationAmount());
 
 
     }

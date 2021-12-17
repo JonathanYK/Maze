@@ -3,23 +3,23 @@ package controller;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class mazeSearchable implements Searchable {
+public class MazeISearchable implements ISearchable {
 
-    maze2d searchableMaze;
+    Maze2d _searchableMaze;
 
-    public mazeSearchable(maze2d maze) {
-        this.searchableMaze = maze;
+    public MazeISearchable(Maze2d maze) {
+        this._searchableMaze = maze;
     }
 
     @Override
     public State getStartState() {
-        return new State(this.searchableMaze.entrance.toString());
+        return new State(this._searchableMaze.entrance.toString());
     }
 
 
     @Override
     public State getGoalState() {
-        return new State(this.searchableMaze.exit.toString());
+        return new State(this._searchableMaze.exit.toString());
     }
 
     public Point stateToPoint (State state) {
@@ -35,13 +35,13 @@ public class mazeSearchable implements Searchable {
 
     public ArrayList<State> getAllPossibleStates(State currState) {
 
-        ArrayList<State> allPossibleStates = new ArrayList<>();
+        ArrayList<State> _allPossibleStates = new ArrayList<>();
 
-        ArrayList<Point> PossiblePointsNeighs = this.searchableMaze.getPossibleSteps(stateToPoint(currState));
+        ArrayList<Point> PossiblePointsNeighs = this._searchableMaze.getPossibleSteps(stateToPoint(currState));
         for (Point iterPoint : PossiblePointsNeighs) {
-            allPossibleStates.add(new State (iterPoint.toString()));
+            _allPossibleStates.add(new State (iterPoint.toString()));
         }
-        return allPossibleStates;
+        return _allPossibleStates;
     }
 
 }

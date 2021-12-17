@@ -2,57 +2,57 @@ package controller;
 
 import java.util.*;
 
-public class BFS extends CommonSearcher {
+public class BFS extends CommonISearcher {
 
-    public Solution search(Searchable searchable) {
+    public Solution search(ISearchable ISearchable) {
 
-        // shortest (solution) state path:
-        Solution solution = new Solution();
+        // shortest (_solution) state path:
+        Solution _solution = new Solution();
 
         // queue that will store all available states:
-        Queue<State> availavleStateQueue = new LinkedList<>();
+        Queue<State> _availavleStateQueue = new LinkedList<>();
 
         // save all visited states - in order to filter next available states:
-        ArrayList<State> visitedStates = new ArrayList<>();
+        ArrayList<State> _visitedStates = new ArrayList<>();
 
-        // adding the start state to availavleStateQueue:
-        availavleStateQueue.add(searchable.getStartState());
+        // adding the start state to _availavleStateQueue:
+        _availavleStateQueue.add(ISearchable.getStartState());
         // evaluate on every state move:
         this.evaluated();
 
-        while (!availavleStateQueue.isEmpty()) {
+        while (!_availavleStateQueue.isEmpty()) {
 
             // pulling the current state:
-            State currState = availavleStateQueue.remove();
+            State currState = _availavleStateQueue.remove();
 
-            // add currState to visitedStates:
-            visitedStates.add(currState);
+            // add currState to _visitedStates:
+            _visitedStates.add(currState);
 
             // breaking rule, shortest route to exit state found:
-            if (currState.getStringState().equals(searchable.getGoalState().getStringState())) {
-                solution.setSolution(currState);
-                return solution;
+            if (currState.getStringState().equals(ISearchable.getGoalState().getStringState())) {
+                _solution.setSolution(currState);
+                return _solution;
             }
 
             // getting all possible states:
-            ArrayList<State> possibleStates = searchable.getAllPossibleStates(currState);
+            ArrayList<State> possibleStates = ISearchable.getAllPossibleStates(currState);
 
             // iterate on all possible states, searching unvisited states:
             for (State posState : possibleStates) {
 
-                // for all unvisited states yet, set parent and add to availavleStateQueue:
-                if (!isStateAlreadyInArraylist(posState, visitedStates)) {
+                // for all unvisited states yet, set parent and add to _availavleStateQueue:
+                if (!isStateAlreadyInArraylist(posState, _visitedStates)) {
                     posState.setParent(currState);
 
-                    if (!isStateAlreadyInArraylist(posState, availavleStateQueue))
-                        availavleStateQueue.add(posState);
+                    if (!isStateAlreadyInArraylist(posState, _availavleStateQueue))
+                        _availavleStateQueue.add(posState);
 
                     // evaluate on every state move:
                     this.evaluated();
                 }
             }
         }
-        return solution;
+        return _solution;
     }
 }
 

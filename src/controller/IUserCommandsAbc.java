@@ -1,33 +1,33 @@
 package controller;
 
-import view.Command;
+import view.ICommand;
 
 import java.util.HashMap;
 
 
-public abstract class userCommandsAbc implements userCommands {
+public abstract class IUserCommandsAbc implements IUserCommands {
 
     // hashmap that holds all the created commands:
-    private HashMap<String, Command> commands;
+    private HashMap<String, ICommand> commands;
 
-    public userCommandsAbc() {
+    public IUserCommandsAbc() {
         this.commands = new HashMap<>();
     }
 
-    public userCommandsAbc(HashMap<String, Command> commands) {
+    public IUserCommandsAbc(HashMap<String, ICommand> commands) {
         this.commands = commands;
     }
 
 
-    public void putCommand(String string, Command command) {
-        commands.put(string, command);
+    public void putCommand(String string, ICommand icommand) {
+        commands.put(string, icommand);
     }
 
     public void clearCommands() {
         commands.clear();
     }
 
-    public Command getCommand(String commandName) {
+    public ICommand getCommand(String commandName) {
         return commands.get(commandName);
     }
 

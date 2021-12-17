@@ -3,17 +3,17 @@ package controller;
 import java.util.ArrayList;
 import java.util.Queue;
 
-public abstract class CommonSearcher implements Searcher {
+public abstract class CommonISearcher implements ISearcher {
 
-    int evaluatedNodes = 0;
+    int _evaluatedNodes = 0;
 
     @Override
     public int getPointEvaluationAmount() {
-        return this.evaluatedNodes;
+        return this._evaluatedNodes;
     }
 
     public void evaluated() {
-        this.evaluatedNodes++;
+        this._evaluatedNodes++;
     }
 
     // checking if curState already visited:

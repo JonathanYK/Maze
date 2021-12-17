@@ -1,6 +1,6 @@
 package controller;
 
-public interface maze2dGenerator {
-    maze2d generate(int mazeSize);
+public interface IMaze2dGenerator {
+    Maze2d generate(int mazeSize);
     String measureAlgorithmTime(int mazeSize) throws Exception;
 }

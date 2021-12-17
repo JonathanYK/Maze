@@ -6,25 +6,25 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Stack;
 
-public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
+public class SimpleIIMaze2DGenerator extends AbstractIMaze2DGenerator {
 
     @Override
-    public maze2d generate(int mazeSize) {
-        maze2d maze = new maze2d(mazeSize);
+    public Maze2d generate(int mazeSize) {
+        Maze2d _maze = new Maze2d(mazeSize);
 
-        // set Random walls on generated maze:
-        setRandomWalls(maze);
+        // set Random walls on generated _maze:
+        setRandomWalls(_maze);
 
-        // create path from entrance to exit of the maze:
-        Stack<mazePoint> currDFSPath = createPathIteratively(maze);
+        // create path from entrance to exit of the _maze:
+        Stack<MazePoint> currDFSPath = createPathIteratively(_maze);
 
-        // clear the maze according to the path:
-        clearMazeWithRoute(maze, currDFSPath);
+        // clear the _maze according to the path:
+        clearMazeWithRoute(_maze, currDFSPath);
 
-        return maze;
+        return _maze;
     }
 
-    private void setRandomWalls(maze2d maze) {
+    private void setRandomWalls(Maze2d maze) {
 
         Random rand = new Random();
         for (int i = 0; i< maze.getMazeSize(); i++) {
@@ -35,17 +35,17 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
     }
 
 
-    private Stack<mazePoint> createPathIteratively(maze2d maze) {
-        Stack<mazePoint> routesTrace = new Stack<>();
-        mazePoint[][] mazePoints = new mazePoint[maze.getMazeSize()][maze.getMazeSize()];
+    private Stack<MazePoint> createPathIteratively(Maze2d maze) {
+        Stack<MazePoint> routesTrace = new Stack<>();
+        MazePoint[][] MazePoints = new MazePoint[maze.getMazeSize()][maze.getMazeSize()];
 
-        ArrayList<mazePoint> alreadyVisited = new ArrayList<>();
+        ArrayList<MazePoint> alreadyVisited = new ArrayList<>();
 
         for (int i = 0; i < maze.getMazeSize(); i++)
             for (int j = 0; j < maze.getMazeSize(); j++)
-                mazePoints[i][j] = new mazePoint(i, j);
+                MazePoints[i][j] = new MazePoint(i, j);
 
-        mazePoint entranceMazePoint = mazePoints[maze.getEntrance().x][maze.getEntrance().y];
+        MazePoint entranceMazePoint = MazePoints[maze.getEntrance().x][maze.getEntrance().y];
 
         entranceMazePoint.setVisited(true);
         routesTrace.push(entranceMazePoint);
@@ -53,7 +53,7 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
 
         while (!routesTrace.empty()) {
 
-            mazePoint currMazePoint = routesTrace.pop();
+            MazePoint currMazePoint = routesTrace.pop();
 
             if (currMazePoint.getX() == maze.getExit().x && currMazePoint.getY() == maze.getExit().y) {
                 routesTrace.push(currMazePoint);
@@ -69,11 +69,11 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
             for (Point possibleStep: possibleSteps) {
                 boolean addTrace = pointAlreadyTraced(possibleStep, alreadyVisited);
                 if (addTrace) {
-                    mazePoints[possibleStep.x][possibleStep.y].setVisited(true);
-                    mazePoints[possibleStep.x][possibleStep.y].setParent(currMazePoint);
-                    routesTrace.push(mazePoints[possibleStep.x][possibleStep.y]);
+                    MazePoints[possibleStep.x][possibleStep.y].setVisited(true);
+                    MazePoints[possibleStep.x][possibleStep.y].setParent(currMazePoint);
+                    routesTrace.push(MazePoints[possibleStep.x][possibleStep.y]);
 
-                    alreadyVisited.add(mazePoints[possibleStep.x][possibleStep.y]);
+                    alreadyVisited.add(MazePoints[possibleStep.x][possibleStep.y]);
                 }
             }
         }
@@ -81,30 +81,30 @@ public class simpleMaze2DGenerator extends abstractMaze2DGenerator {
     }
 
     // validate the point wasn't visited
-    public boolean pointAlreadyTraced(Point p, ArrayList<mazePoint> alreadyVisited) {
-        for (mazePoint av : alreadyVisited)
+    public boolean pointAlreadyTraced(Point p, ArrayList<MazePoint> alreadyVisited) {
+        for (MazePoint av : alreadyVisited)
             if (av.getX() == p.x && av.getY() == p.y)
                 return false;
         return true;
     }
 
-    private Stack<mazePoint> getSolutionPath(maze2d maze, mazePoint revSolutionMazePoint) {
-        Stack <mazePoint> currDFSPath = new Stack<>();
+    private Stack<MazePoint> getSolutionPath(Maze2d maze, MazePoint revSolutionMazePoint) {
+        Stack <MazePoint> currDFSPath = new Stack<>();
 
         // Adding the start point:
-        currDFSPath.push(new mazePoint(maze.getEntrance().x, maze.getEntrance().y));
+        currDFSPath.push(new MazePoint(maze.getEntrance().x, maze.getEntrance().y));
 
         while (revSolutionMazePoint.getParent() != null) {
-            currDFSPath.push(new mazePoint(revSolutionMazePoint.getX(), revSolutionMazePoint.getY()));
+            currDFSPath.push(new MazePoint(revSolutionMazePoint.getX(), revSolutionMazePoint.getY()));
             revSolutionMazePoint = revSolutionMazePoint.getParent();
         }
         return currDFSPath;
     }
 
-    private void clearMazeWithRoute(maze2d maze, Stack<mazePoint> currDFSPath) {
+    private void clearMazeWithRoute(Maze2d maze, Stack<MazePoint> currDFSPath) {
 
         while (!currDFSPath.empty()) {
-            mazePoint currRouteMazePoint = currDFSPath.pop();
+            MazePoint currRouteMazePoint = currDFSPath.pop();
             maze.setPointVal(currRouteMazePoint.getX(), currRouteMazePoint.getY(), true);
         }
     }

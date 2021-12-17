@@ -1,12 +1,12 @@
 package controller;
 
-public class mazePoint {
+public class MazePoint {
     private int x;
     private int y;
-    private mazePoint parent;
+    private MazePoint parent;
     private boolean visited = false;
 
-    public mazePoint(int x, int y) {
+    public MazePoint(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -23,7 +23,7 @@ public class mazePoint {
         return visited;
     }
 
-    public mazePoint getParent() {
+    public MazePoint getParent() {
         return this.parent;
     }
 
@@ -31,14 +31,14 @@ public class mazePoint {
         this.visited = val;
     }
 
-    public void setParent(mazePoint p) {
+    public void setParent(MazePoint p) {
         this.parent = p;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("\ncontroller.mazePoint: [");
+        sb.append("\nMazePoint: [");
         sb.append(this.getX());
         sb.append("][");
         sb.append(this.getY());

@@ -28,31 +28,31 @@ class Node {
 }
 
 
-public class mazeCompression {
+public class MazeCompression {
 
-    public static int mazeCnt;
-    File mazeCntFile = new File("mazeCnt.bin");
+    public static int _mazeCnt;
+    File _mazeCntFile = new File("mazeCnt.bin");
 
-    public mazeCompression() throws IOException {
+    public MazeCompression() throws IOException {
 
         // if mazeCnt.txt exists:
-        if (mazeCntFile.exists() && !mazeCntFile.isDirectory()) {
+        if (_mazeCntFile.exists() && !_mazeCntFile.isDirectory()) {
 
             // read the existing mazeCnt:
-            DataInputStream dis = new DataInputStream(new FileInputStream(mazeCntFile));
-            mazeCnt = dis.read();
+            DataInputStream dis = new DataInputStream(new FileInputStream(_mazeCntFile));
+            _mazeCnt = dis.read();
             dis.close();
         }
 
         // if mazeCnt.txt not exists:
         else{
             // create the file and set the val to 0:
-            boolean mazeCntTxtCreated = mazeCntFile.createNewFile();
+            boolean mazeCntTxtCreated = _mazeCntFile.createNewFile();
             if (!mazeCntTxtCreated) {
                 throw new IOException("Unable to create mazeCnt file at specified path. Please check that!");
             }
 
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(mazeCntFile));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(_mazeCntFile));
             dos.write(0);
             dos.close();
             }
@@ -62,7 +62,7 @@ public class mazeCompression {
     public int getUpdateMazeCnt() throws IOException {
 
         // read the value of mazeCntTxt:
-        DataInputStream dis = new DataInputStream(new FileInputStream(mazeCntFile));
+        DataInputStream dis = new DataInputStream(new FileInputStream(_mazeCntFile));
         int updatedMazeCnt = dis.read();
         dis.close();
 
@@ -70,7 +70,7 @@ public class mazeCompression {
         updatedMazeCnt++;
 
         // write updatedMazeCnt to mazeCntTxt:
-        DataOutputStream dos = new DataOutputStream(new FileOutputStream(mazeCntFile));
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(_mazeCntFile));
         dos.write(updatedMazeCnt);
         dos.close();
 
@@ -187,7 +187,7 @@ public class mazeCompression {
         return decodedStr;
     }
 
-    private String mazeToHuffStr(maze2d maze) {
+    private String mazeToHuffStr(Maze2d maze) {
 
         final StringBuilder sb = new StringBuilder();
 
@@ -214,7 +214,7 @@ public class mazeCompression {
         return sb.toString();
     }
 
-    public maze2d huffStrToMaze(String str) {
+    public Maze2d huffStrToMaze(String str) {
 
         String[] splitStr = str.split("-");
 
@@ -231,7 +231,7 @@ public class mazeCompression {
         }
 
 
-        return new maze2d(splitStr[0], Integer.parseInt(splitStr[3]),
+        return new Maze2d(splitStr[0], Integer.parseInt(splitStr[3]),
                 new Point(Integer.parseInt(splitStr[1].split(",")[0]),
                         Integer.parseInt(splitStr[1].split(",")[1])),
                 new Point(Integer.parseInt(splitStr[2].split(",")[0]),
@@ -240,13 +240,13 @@ public class mazeCompression {
 
 
 
-    public String encodeHuffmanAndSave(maze2d currMaze) throws IOException {
+    public String encodeHuffmanAndSave(Maze2d currMaze) throws IOException {
         return encodeHuffmanAndSave(currMaze, null);
     }
 
 
     // encoding using Huffman and saving the
-    public String encodeHuffmanAndSave(maze2d currMaze, String mazeName) throws IOException {
+    public String encodeHuffmanAndSave(Maze2d currMaze, String mazeName) throws IOException {
 
         String compressedMazeFilename;
 
@@ -270,14 +270,14 @@ public class mazeCompression {
     }
 
 
-    public maze2d decodeHuffmanMazeFileToMaze(String encodedFilename) throws IOException {
+    public Maze2d decodeHuffmanMazeFileToMaze(String encodedFilename) throws IOException {
 
         String actualDecoded;
         DataInputStream ois = new DataInputStream(new FileInputStream(encodedFilename));
 
         byte[] binData = ois.readAllBytes();
-        String retrievedString = new String(binData);
         ois.close();
+        String retrievedString = new String(binData);
 
         actualDecoded = huffmanDecoder(retrievedString);
 

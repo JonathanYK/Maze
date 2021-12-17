@@ -2,6 +2,7 @@ package view;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class CLI {
@@ -16,7 +17,7 @@ public class CLI {
     }
 
 
-    public CLI(String inputFileStr, String outputFileStr) throws IOException {
+    public CLI(String inputFileStr, String outputFileStr) throws Exception {
 
         File initialFile = new File(inputFileStr);
         this.is = new FileInputStream(initialFile);
@@ -26,21 +27,43 @@ public class CLI {
         // check if concat or rewrite the file:
         boolean fileCreated = osFile.createNewFile();
         if (!fileCreated) {
-            throw new IOException("Unable to create file at specified path. It already exists");
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("This file already exists, override? y/n");
+            String ans = sc.nextLine();
+
+            if (ans.equals("y")) {
+                System.out.println("Overriding the file...");
+                boolean fileDeleted = osFile.delete();
+                boolean fileOverrideCreated = osFile.createNewFile();
+                if(!fileDeleted || !fileOverrideCreated)
+                    throw new Exception("Deleting or creating overridden file failed!");
+
+                this.os = new FileOutputStream(osFile, false);
+            }
+            else if (ans.equals("n")) {
+                System.out.println("Appending to the existing file...");
+                this.os = new FileOutputStream(osFile, true);
+            }
+
+            else {
+                System.out.println("Wrong input! exit without any actions..");
+                System.exit(0);
+            }
         }
 
-        this.os = new FileOutputStream(osFile, false);
+
 
     }
 
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void start(mazeUserCommands uc) throws IOException, ClassNotFoundException {
+    public void start(MazeIUserCommands uc) throws IOException, ClassNotFoundException {
         Scanner sc = new Scanner(this.is);
 
         os.write("-------------------------".getBytes(StandardCharsets.UTF_8));
         os.write("\nWELCOME TO MAZES CLI\n\n".getBytes(StandardCharsets.UTF_8));
-        os.write("Available commands:".getBytes(StandardCharsets.UTF_8));
+        os.write("Available commands:\n".getBytes(StandardCharsets.UTF_8));
         os.write(uc.getAllCommandNames().getBytes(StandardCharsets.UTF_8));
         os.write("-------------------------\n".getBytes(StandardCharsets.UTF_8));
 
