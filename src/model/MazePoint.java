@@ -1,6 +1,7 @@
-package controller;
+package model;
 
 public class MazePoint {
+
     private int x;
     private int y;
     private MazePoint parent;

@@ -1,13 +1,12 @@
-package view;
+package controller;
+
+import model.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import controller.*;
-
 
 public class MazeIUserCommands extends IUserCommandsAbc {
 
@@ -70,8 +69,8 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         }
     }
 
-    // generating mazes of kind/new maze name/ maze size
-    // example: genmaze simplemaze-mazeName-mazeSize
+    // generating mazes: kind-maze name-maze size
+    // example: genmaze simplemaze-my_new_maze-15
     private class generateICommand implements ICommand {
 
         @Override
@@ -80,15 +79,16 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(genParams.split("-")));
             IMaze2dGenerator imaze2DGenerator;
 
-            // validate the maze size is int:
+            // validate that the maze size is int:
             try {
                 Integer.parseInt(genParamsLst.get(2));
             } catch (NumberFormatException nfe) {
-                return "genmaze recieved not a number value, aborted!";
+                return "genmaze received not a number value, aborted!";
             }
 
             if (genParamsLst.get(0).equals("simplemaze")) {
                 imaze2DGenerator = new SimpleIIMaze2DGenerator();
+                // new SimpleIIMaze2DGenerator() should be in the model!
             }
 
              else if (genParamsLst.get(0).equals("mymaze")) {
@@ -98,12 +98,10 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             else {
                 return "Wrong maze type!";
             }
-
                 Maze2d genMaze2D = imaze2DGenerator.generate(Integer.parseInt(genParamsLst.get(2)));
                 genMaze2D.setMazeName(genParamsLst.get(1));
                 addGeneratedMazesPath(genMaze2D);
                 return genParamsLst.get(1) + " " + genParamsLst.get(0) + " generated!";
-
         }
     }
 

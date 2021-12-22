@@ -1,8 +1,11 @@
 package view;
 
+import controller.MazeIUserCommands;
+import model.MazeModel;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CLI {
@@ -10,21 +13,41 @@ public class CLI {
     InputStream is;
     OutputStream os;
 
-    // default constructor with default IOstreanms (console IO):
-    public CLI() {
+    MazeModel model;
+    MazeIUserCommands uc;
+
+    boolean welcomeLogoPrinted = false;
+
+
+    //dbg remove:-------------
+    String input = "";
+
+    public void setCliInput(String str) {
+        this.input = input.concat(str);
+    }
+
+    public String getCliInput() {
+        return this.input;
+    }
+    //-----------------------
+
+    // default constructor with default IOstreams (console IO):
+    public CLI(MazeModel model) {
         this.is = System.in;
         this.os = System.out;
+
+        this.model = model;
+        this.uc = new MazeIUserCommands();
+
     }
 
 
-    public CLI(String inputFileStr, String outputFileStr) throws Exception {
-
+    public CLI(String inputFileStr, String outputFileStr, MazeModel model) throws Exception {
         File initialFile = new File(inputFileStr);
         this.is = new FileInputStream(initialFile);
-
         File osFile = new File(outputFileStr);
 
-        // check if concat or rewrite the file:
+        // check if appending or rewriting the file:
         boolean fileCreated = osFile.createNewFile();
         if (!fileCreated) {
             Scanner sc = new Scanner(System.in);
@@ -52,21 +75,20 @@ public class CLI {
             }
         }
 
-
-
+        this.model = model;
+        this.uc = new MazeIUserCommands();
     }
 
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public void start(MazeIUserCommands uc) throws IOException, ClassNotFoundException {
+    public void start() throws IOException, ClassNotFoundException {
         Scanner sc = new Scanner(this.is);
 
         os.write("-------------------------".getBytes(StandardCharsets.UTF_8));
-        os.write("\nWELCOME TO MAZES CLI\n\n".getBytes(StandardCharsets.UTF_8));
+        os.write("\nWELCOME TO MAZES WORLD!\n\n".getBytes(StandardCharsets.UTF_8));
         os.write("Available commands:\n".getBytes(StandardCharsets.UTF_8));
-        os.write(uc.getAllCommandNames().getBytes(StandardCharsets.UTF_8));
+        os.write(this.uc.getAllCommandNames().getBytes(StandardCharsets.UTF_8));
         os.write("-------------------------\n".getBytes(StandardCharsets.UTF_8));
-
 
         while (true) {
 
@@ -74,14 +96,52 @@ public class CLI {
             String params = sc.next();
             String retStr;
 
-
-            if (uc.isValidCommand(cmd)) {
-                retStr = uc.getCommand(cmd).doCommand(params);
-                os.write((retStr +"\n").getBytes(StandardCharsets.UTF_8));
+            if (this.uc.isValidCommand(cmd)) {
+                retStr = this.uc.getCommand(cmd).doCommand(params);
+                this.os.write((retStr +"\n").getBytes(StandardCharsets.UTF_8));
             }
             else {
-                os.write(("Wrong command provided!").getBytes(StandardCharsets.UTF_8));
+                this.os.write(("Wrong command provided!").getBytes(StandardCharsets.UTF_8));
             }
         }
+    }
+
+
+    private void printWelcomeLogo() throws IOException {
+        this.os.write("-------------------------".getBytes(StandardCharsets.UTF_8));
+        this.os.write("\nWELCOME TO MAZES WORLD!\n\n".getBytes(StandardCharsets.UTF_8));
+        this.os.write("Available commands:\n".getBytes(StandardCharsets.UTF_8));
+        this.os.write(this.uc.getAllCommandNames().getBytes(StandardCharsets.UTF_8));
+        this.os.write("-------------------------\n".getBytes(StandardCharsets.UTF_8));
+
+        this.welcomeLogoPrinted = true;
+    }
+
+
+    @SuppressWarnings("InfiniteLoopStatement")
+    public List<String> getData() throws IOException, ClassNotFoundException {
+        Scanner sc = new Scanner(this.is);
+
+        if(!this.welcomeLogoPrinted)
+            printWelcomeLogo();
+
+        List<String> inputTxt = new ArrayList<>();
+
+        inputTxt.add(sc.next());
+        inputTxt.add(sc.next());
+
+        return inputTxt;
+
+//            if (this.uc.isValidCommand(cmd)) {
+//                retStr = this.uc.getCommand(cmd).doCommand(params);
+//                os.write((retStr + "\n").getBytes(StandardCharsets.UTF_8));
+//            } else {
+//                os.write(("Wrong command provided!").getBytes(StandardCharsets.UTF_8));
+//            }
+    }
+
+    public void printer(String outputTxt) throws IOException {
+        os.write((outputTxt).getBytes(StandardCharsets.UTF_8));
+
     }
 }

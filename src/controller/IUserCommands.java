@@ -1,10 +1,10 @@
 package controller;
 
-import view.ICommand;
+import model.ICommand;
 
 import java.util.HashMap;
 
-public interface IUserCommands {
+public interface  IUserCommands {
 
     // Hashmap that holds all the created commands:
     HashMap<String, ICommand> _commands = new HashMap<>();

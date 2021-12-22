@@ -1,9 +1,8 @@
 package controller;
 
-import view.ICommand;
+import model.ICommand;
 
 import java.util.HashMap;
-
 
 public abstract class IUserCommandsAbc implements IUserCommands {
 

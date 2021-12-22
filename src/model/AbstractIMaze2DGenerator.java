@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 public abstract class AbstractIMaze2DGenerator implements IMaze2dGenerator {
 
