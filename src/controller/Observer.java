@@ -7,9 +7,13 @@ public class Observer implements IObserver {
 
     String data = "";
 
+    public String getData() {
+        return this.data;
+    }
+
     @Override
     public void update(IObservable obs) {
-        data = data.concat(((Observable) obs).getData());
+        data = ((Observable) obs).getData();
 
     }
 }

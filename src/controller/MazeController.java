@@ -4,58 +4,71 @@ import model.MazeModel;
 import view.CLI;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
-
-public class MazeController {
-
-    private MazeIUserCommands uc = new MazeIUserCommands();
+public class MazeController implements IController {
 
     private CLI cli_view;
     private MazeModel maze_model;
 
+
+    public Observable VCObservable;
+    public Observer CVObserver;
+
+    public Observable CMObservable;
+    public Observer MCObserver;
+
+    public Observable MCObservable;
+    public Observer CMObserver;
+
+    public Observable CVObservable;
+    public Observer VCObserver;
+
+
     public MazeController(CLI cli_view, MazeModel maze_model) {
         this.cli_view = cli_view;
         this.maze_model = maze_model;
+
+
+        this.VCObservable = new Observable();
+        this.CVObserver = new Observer();
+        VCObservable.add(CVObserver);
+
+        this.CMObservable = new Observable();
+        this.MCObserver = new Observer();
+        CMObservable.add(MCObserver);
+
+        this.MCObservable = new Observable();
+        this.CMObserver = new Observer();
+        MCObservable.add(CMObserver);
+
+        this.CVObservable = new Observable();
+        this.VCObserver = new Observer();
+        CVObservable.add(VCObserver);
+
     }
 
-
-    public void controllerStarted() throws IOException, ClassNotFoundException {
-
-        Observable observable = new Observable();
-        Observer observer = new Observer();
-        observable.add(observer);
-
+    @SuppressWarnings("InfiniteLoopStatement")
+    public void mainMazeCommandsMenu() throws IOException, ClassNotFoundException {
 
         while(true) {
-            List<String> retData = this.cli_view.getData();
 
-            if (this.uc.isValidCommand(retData.get(0))) {
-                String retStr = this.uc.getCommand(retData.get(0)).doCommand(retData.get(1));
+            // Retrieving data from view (CLI command):
+            this.cli_view.retrieveViewData();
 
-                this.cli_view.printer(retStr + "\n");
-            } else {
-                this.cli_view.printer("Wrong command provided!");
+            // Transferring the data from view to the model, then validating the data:
+            this.CMObservable.setData(this.CVObserver.getData());
+
+            if (this.maze_model.validateRetrievedCommand()) {
+
+                // transferring the validated data from the controller to the model, then executing the command:
+                this.CMObservable.setData(this.CMObserver.getData());
+                this.maze_model.executeCommand();
             }
 
+            // Transferring data from the model to the view, then handling the message on view:
+            this.CVObservable.setData(this.CMObserver.getData());
+            this.cli_view.showMessage();
+
         }
-
-
-
-
-
-
-
-//        this.cli_view.setCliInput("generate maze size 5");
-//
-//        observable.setData(this.cli_view.getCliInput());
-//
-//        String retDataExample = observer.data;
-//        System.out.println("hh");
-
-
-
-
     }
 }

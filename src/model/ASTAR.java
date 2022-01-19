@@ -19,8 +19,7 @@ public class ASTAR extends CommonISearcher {
         State EntranceState = ISearchable.getStartState();
         State ExitState = ISearchable.getGoalState();
 
-        // Calculating costs for entrance and exit states:
-        //EntranceState.setGcost(EntranceState);
+        // Calculating cost for exit state:
         EntranceState.setHcost(ExitState);
 
         // Adding entrance state to _StatesOpenedPool:
@@ -35,7 +34,8 @@ public class ASTAR extends CommonISearcher {
             // finding the best next point - with the best fCost (or hCost if 4 = {controller.State@882} there is more then one point with best fCost)
             for (int i = 1; i <= _StatesOpenedPool.size() - 1; i++) {
                 if (_StatesOpenedPool.get(i).getFcost() < currState.getFcost() ||
-                        _StatesOpenedPool.get(i).getFcost() == currState.getFcost() && _StatesOpenedPool.get(i).getHcost() < currState.getHcost()) {
+                        _StatesOpenedPool.get(i).getFcost() == currState.getFcost() &&
+                                _StatesOpenedPool.get(i).getHcost() < currState.getHcost()) {
 
                     currState = _StatesOpenedPool.get(i);
                 }
@@ -51,7 +51,6 @@ public class ASTAR extends CommonISearcher {
             if (currState.getStringState().equals(ExitState.getStringState())) {
                 // get the _solution path from parent:
 
-                //this.getFullRoute(_solution, currState);
                 _solution.setSolution(currState);
                 return _solution;
             }
@@ -77,8 +76,6 @@ public class ASTAR extends CommonISearcher {
                     iterNeighborState.setParent(currState);
 
                     // if iterNeighborState not in discovered pool (prev if was true of first condition):
-                    //if (!_StatesOpenedPool.contains(iterNeighborState))
-
                     if (!isStateAlreadyInArraylist(iterNeighborState, _StatesOpenedPool) && !isStateAlreadyInArraylist(iterNeighborState, _StatesClosedPool))
                         _StatesOpenedPool.add(iterNeighborState);
                         // evaluate on every state move:

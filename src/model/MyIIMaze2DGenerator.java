@@ -48,8 +48,16 @@ public class MyIIMaze2DGenerator extends AbstractIMaze2DGenerator {
 
                 // get all dual available neighbors:
                 getDualAvailNeighbors(maze, pointsPath, currDualNeighbor, mazeStructure);
+
             }
         }
+        // set the exit point as a valid path:
+        maze.setPointVal((int) maze.exit.getX(), (int) maze.exit.getX(), true);
+
+        // While using even maze, we should clear manually the cell near the exit:
+        if (maze.mazeSize%2 == 0)
+            maze.setPointVal(maze.mazeSize-2, maze.mazeSize-1, true);
+
     }
 
     // This method used for getting dual neighbors (first nearest and second nearest from North/South/East/West):

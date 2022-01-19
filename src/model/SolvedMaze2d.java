@@ -2,27 +2,27 @@ package model;
 
 public class SolvedMaze2d {
 
-    public Maze2d get_maze() {
+    public Maze2d getMaze() {
         return _maze;
     }
 
-    public void set_maze(Maze2d _maze) {
+    public void setMaze(Maze2d _maze) {
         this._maze = _maze;
     }
 
-    public Solution get_ASTAR() {
+    public Solution getAstar() {
         return _ASTAR;
     }
 
-    public void set_ASTAR(Solution _ASTAR) {
+    public void setAstar(Solution _ASTAR) {
         this._ASTAR = _ASTAR;
     }
 
-    public Solution get_BFS() {
+    public Solution getBfs() {
         return _BFS;
     }
 
-    public void set_BFS(Solution _BFS) {
+    public void setBfs(Solution _BFS) {
         this._BFS = _BFS;
     }
 

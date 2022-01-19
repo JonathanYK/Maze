@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Observable implements IObservable {
 
+    private String data;
+
     public String getData() {
         return this.data;
     }
@@ -17,9 +19,7 @@ public class Observable implements IObservable {
         notifier();
     }
 
-    private String data;
-
-    private List<IObserver> observables = new ArrayList();
+    private List<IObserver> observables = new ArrayList<>();
 
     @Override
     public void add(IObserver obs) { this.observables.add(obs); }
