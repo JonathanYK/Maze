@@ -26,32 +26,16 @@ public class MazeModel implements IModel {
     public boolean validateRetrievedCommand() {
 
         String[] inputBuf = mazeController.MCObserver.getData().split(" ");
+        String retValidation = this.uc.validateCommand(inputBuf);
 
-        // Special case, where the command is exit:
-        if (inputBuf[0].equalsIgnoreCase("exit"))
-            inputBuf = new String [] {"exit", "e"};
+        mazeController.MCObservable.setData(retValidation);
 
-
-        // Wrong input:
-        else if (inputBuf.length != 2) {
-            this.mazeController.MCObservable.setData("Wrong input!\n");
+        if (retValidation.startsWith("Wrong") || retValidation.startsWith("wrong"))
             return false;
-        }
 
-        // Wrong command name:
-        else if (!isValidCommand(inputBuf[0])) {
-            this.mazeController.MCObservable.setData("Wrong command typed!\n");
-            return false;
-        }
-
-        // In case the command is correct:
-        this.mazeController.MCObservable.setData(inputBuf[0] + " " + inputBuf[1]);
         return true;
     }
 
-    public boolean isValidCommand(String providedCommand) {
-        return uc.commands.containsKey(providedCommand);
-    }
 
     public void executeCommand() throws ClassNotFoundException, IOException {
 
@@ -84,24 +68,7 @@ public class MazeModel implements IModel {
     }
 
 
-    public void generateMaze(String mazeType, String mazeName, int mazeSize) {
 
-        IMaze2dGenerator imaze2DGenerator = null;
-
-        if (mazeType.equals("simplemaze")) {
-            imaze2DGenerator = new SimpleIIMaze2DGenerator();
-        }
-        else if (mazeType.equals("mymaze")) {
-            imaze2DGenerator = new MyIIMaze2DGenerator();
-        }
-
-        Maze2d genMaze2D = imaze2DGenerator.generate(mazeSize);
-        if (genMaze2D != null) {
-            genMaze2D.setMazeName(mazeName);
-            addGeneratedMazesPath(genMaze2D);
-            mazeController.MCObservable.setData(mazeName + " " + mazeType + " with size of " + mazeSize + " generated!\n");
-        }
-    }
 
 
     public void saveMaze(String mazeName) throws IOException {

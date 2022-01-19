@@ -27,7 +27,6 @@ class Node {
     public Node() {}
 }
 
-
 public class MazeCompression {
 
     public static int _mazeCnt;
@@ -96,7 +95,6 @@ public class MazeCompression {
     public static boolean isLeaf(Node root) {
         return root.left == null && root.right == null;
     }
-
 
     public static Node huffmanTreeBuilder(String text) {
         // Validate not an empty string:
@@ -237,7 +235,6 @@ public class MazeCompression {
                 new Point(Integer.parseInt(splitStr[2].split(",")[0]),
                         Integer.parseInt(splitStr[2].split(",")[1])), structure);
     }
-
 
 
     public String encodeHuffmanAndSave(Maze2d currMaze) throws IOException {

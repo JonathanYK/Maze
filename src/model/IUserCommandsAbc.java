@@ -41,4 +41,6 @@ public abstract class IUserCommandsAbc implements IUserCommands {
         }
         return retStringBuilder.toString();
     }
+
+    public abstract String validateCommand(String[] inputBuf);
 }

@@ -20,6 +20,25 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         this.putCommand("exit", new exitICommand());
     }
 
+    @Override
+    public String validateCommand(String[] inputBuf) {
+
+        // Special case, where the command is exit:
+        if (inputBuf[0].equalsIgnoreCase("exit"))
+            inputBuf = new String [] {"exit", "e"};
+
+        // Wrong input:
+        else if (inputBuf.length != 2)
+            return "Wrong input!\n";
+
+        // Wrong command name:
+        else if (!isValidCommand(inputBuf[0]))
+            return "Wrong command typed!\n";
+
+        // In case the command is correct:
+        return inputBuf[0] + " " + inputBuf[1];
+    }
+
 
     // this method will print full path of the file in case file name provided as path, otherwise return all the files
     // in path:
@@ -82,7 +101,27 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             }
             ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(genParams.split("-")));
 
-            maze_model.generateMaze(genParamsLst.get(0), genParamsLst.get(1), Integer.parseInt(genParamsLst.get(2)));
+            Maze2d retMaze2d = maze_model.generateMaze(genParamsLst.get(0), genParamsLst.get(1), Integer.parseInt(genParamsLst.get(2)));
+
+            if (genMaze2D != null) {
+                genMaze2D.setMazeName(mazeName);
+                addGeneratedMazesPath(genMaze2D);
+                mazeController.MCObservable.setData(mazeName + " " + mazeType + " with size of " + mazeSize + " generated!\n");
+            }
+        }
+
+        public Maze2d generateMaze(String mazeType, String mazeName, int mazeSize) {
+
+            IMaze2dGenerator imaze2DGenerator = null;
+
+            if (mazeType.equals("simplemaze")) {
+                imaze2DGenerator = new SimpleIIMaze2DGenerator();
+            }
+            else if (mazeType.equals("mymaze")) {
+                imaze2DGenerator = new MyIIMaze2DGenerator();
+            }
+
+            return imaze2DGenerator.generate(mazeSize);
 
         }
 
@@ -249,5 +288,10 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             return "";
         }
     }
+
+    public boolean isValidCommand(String providedCommand) {
+        return this.commands.containsKey(providedCommand);
+    }
+
 }
 
