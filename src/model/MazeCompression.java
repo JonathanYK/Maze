@@ -44,19 +44,17 @@ public class MazeCompression {
         }
 
         // if mazeCnt.txt not exists:
-        else{
+        else {
             // create the file and set the val to 0:
             boolean mazeCntTxtCreated = _mazeCntFile.createNewFile();
-            if (!mazeCntTxtCreated) {
+            if (!mazeCntTxtCreated)
                 throw new IOException("Unable to create mazeCnt file at specified path. Please check that!");
-            }
 
             DataOutputStream dos = new DataOutputStream(new FileOutputStream(_mazeCntFile));
             dos.write(0);
             dos.close();
-            }
+        }
     }
-
 
     public int getUpdateMazeCnt() throws IOException {
 
@@ -78,14 +76,13 @@ public class MazeCompression {
 
     // Traverse huffman tree, then storing codes in a map:
     public static void encode(Node root, String str, Map<Character, String> huffmanCode) {
-        if (root == null) {
+        if (root == null)
             return;
-        }
 
         // Leaf node encountering:
-        if (isLeaf(root)) {
+        if (isLeaf(root))
             huffmanCode.put(root.ch, str.length() > 0 ? str : "1");
-        }
+
         encode(root.left, str + '0', huffmanCode);
         encode(root.right, str + '1', huffmanCode);
     }
@@ -98,9 +95,8 @@ public class MazeCompression {
 
     public static Node huffmanTreeBuilder(String text) {
         // Validate not an empty string:
-        if (text == null || text.length() == 0) {
+        if (text == null || text.length() == 0)
             return new Node();
-        }
 
         // Count the frequency of appearance of each character and store it in a map:
         Map<Character, Integer> freqCharAmountMap = new HashMap<>();
@@ -122,12 +118,9 @@ public class MazeCompression {
 
         // main looping until last node:
         while (pq.size() != 1) {
-
             // Remove two nodes with highest frequency:
             Node left = pq.poll();
             Node right = pq.poll();
-
-
 
             // Create new node with 2 removed nodes as it's children, freq of the new one equal to sum of removed nodes:
             if (left.freq != null && right.freq != null) {
@@ -215,9 +208,7 @@ public class MazeCompression {
     public Maze2d huffStrToMaze(String str) {
 
         String[] splitStr = str.split("-");
-
         int size = Integer.parseInt(splitStr[3]);
-
         boolean [][] structure = new boolean[size][size];
 
         int structureIdx = 0;
@@ -236,11 +227,9 @@ public class MazeCompression {
                         Integer.parseInt(splitStr[2].split(",")[1])), structure);
     }
 
-
     public String encodeHuffmanAndSave(Maze2d currMaze) throws IOException {
         return encodeHuffmanAndSave(currMaze, null);
     }
-
 
     // encoding using Huffman and saving the
     public String encodeHuffmanAndSave(Maze2d currMaze, String mazeName) throws IOException {
@@ -249,9 +238,8 @@ public class MazeCompression {
 
         if (mazeName == null)
             compressedMazeFilename = currMaze.getClass().getSimpleName() + "@" + getUpdateMazeCnt() + ".bin";
-        else {
+        else
             compressedMazeFilename = mazeName + ".bin";
-        }
 
         // Converting compressor to string and encoding:
         String huffInputStr = mazeToHuffStr(currMaze);
@@ -266,7 +254,6 @@ public class MazeCompression {
         return compressedMazeFilename;
     }
 
-
     public Maze2d decodeHuffmanMazeFileToMaze(String encodedFilename) throws IOException {
 
         String actualDecoded;
@@ -277,7 +264,6 @@ public class MazeCompression {
         String retrievedString = new String(binData);
 
         actualDecoded = huffmanDecoder(retrievedString);
-
         return huffStrToMaze(actualDecoded);
     }
 }

@@ -66,7 +66,6 @@ public class MyIIMaze2DGenerator extends AbstractIMaze2DGenerator {
 
         // We'll search for two neighbors where between them a wall - then we'll destroy this wall.
 
-
         // only the SECOND nearest is relevant:
         int secX = currDualNeighbor[1].getX();
         int secY = currDualNeighbor[1].getY();

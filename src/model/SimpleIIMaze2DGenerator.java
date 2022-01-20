@@ -34,7 +34,6 @@ public class SimpleIIMaze2DGenerator extends AbstractIMaze2DGenerator {
         }
     }
 
-
     private Stack<MazePoint> createPathIteratively(Maze2d maze) {
         Stack<MazePoint> routesTrace = new Stack<>();
         MazePoint[][] MazePoints = new MazePoint[maze.getMazeSize()][maze.getMazeSize()];
@@ -72,7 +71,6 @@ public class SimpleIIMaze2DGenerator extends AbstractIMaze2DGenerator {
                     MazePoints[possibleStep.x][possibleStep.y].setVisited(true);
                     MazePoints[possibleStep.x][possibleStep.y].setParent(currMazePoint);
                     routesTrace.push(MazePoints[possibleStep.x][possibleStep.y]);
-
                     alreadyVisited.add(MazePoints[possibleStep.x][possibleStep.y]);
                 }
             }

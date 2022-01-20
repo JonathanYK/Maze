@@ -50,7 +50,6 @@ public class ASTAR extends CommonISearcher {
 
             if (currState.getStringState().equals(ExitState.getStringState())) {
                 // get the _solution path from parent:
-
                 _solution.setSolution(currState);
                 return _solution;
             }

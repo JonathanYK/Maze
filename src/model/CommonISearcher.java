@@ -3,7 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Queue;
 
-public abstract class CommonISearcher implements ISearcher {
+public abstract class
+CommonISearcher implements ISearcher {
 
     int _evaluatedNodes = 0;
 

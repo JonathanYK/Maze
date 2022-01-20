@@ -59,7 +59,6 @@ public class Maze2d {
 
         if (customMaze[0].length != this.mazeSize || customMaze[1].length != this.mazeSize)
             throw new Exception("Maze structure isn't equal to the maze size!");
-
         this.mazeStructure = customMaze;
     }
 

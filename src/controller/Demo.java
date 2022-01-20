@@ -22,7 +22,6 @@ public class Demo {
         _simpleMazeSolved.setMaze(simpleMaze2D);
         MazeISearchable _simpleMS = new MazeISearchable(simpleMaze2D);
 
-
         // Decoding and Saving:
         String compressedFilename = _MC.encodeHuffmanAndSave(simpleMaze2D);
 
@@ -30,7 +29,6 @@ public class Demo {
         Maze2d encodedMaze2D = _MC.decodeHuffmanMazeFileToMaze(compressedFilename);
         Maze2d simpleDecoded = _simpleMaze2DGenerator.generate(mazeSize);
         simpleDecoded.setCustomMaze(encodedMaze2D.getMazeStructure());
-
 
         // Generating myMaze:
         MyIIMaze2DGenerator _myMaze2DGenerator = new MyIIMaze2DGenerator();
@@ -46,7 +44,6 @@ public class Demo {
         System.out.println(_myMaze2DGenerator.measureAlgorithmTime(mazeSize));
         System.out.println(myMaze2D);
 
-
         // Solving simpleMaze searchable using controller.BFS:
         _simpleMazeSolved.setBfs(_bfsClass.search(_simpleMS));
         System.out.println("\nsimpleMaze2dSearchable BFS:\n" + _simpleMazeSolved.getBfs().getSolution());
@@ -54,7 +51,6 @@ public class Demo {
         // Solving myMaze searchable using controller.BFS:
         _myMazeSolved.setBfs(_bfsClass.search(_myMS));
         System.out.println("\nmyMaze2dSearchable BFS:\n" + _myMazeSolved.getBfs().getSolution());
-
 
         // Solving simpleMaze using A Star:
         _simpleMazeSolved.setAstar(_ASTARClass.search(_simpleMS));
@@ -64,13 +60,10 @@ public class Demo {
         _myMazeSolved.setAstar(_ASTARClass.search(_myMS));
         System.out.println("\nmyMaze2dSearchable ASTAR:\n" +  _myMazeSolved.getAstar().getSolution());
 
-
         System.out.println("\nBFS evaluation amount: " + _bfsClass.getPointEvaluationAmount());
         System.out.println("ASTAR evaluation amount: " + _ASTARClass.getPointEvaluationAmount());
-
     }
 }
-
 
 
 //          In order to create custom maze:

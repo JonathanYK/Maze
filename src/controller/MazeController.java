@@ -5,11 +5,10 @@ import view.CLI;
 
 import java.io.IOException;
 
-public class MazeController implements IController {
+public class MazeController {
 
     private CLI cli_view;
     private MazeModel maze_model;
-
 
     public Observable VCObservable;
     public Observer CVObserver;
@@ -23,11 +22,9 @@ public class MazeController implements IController {
     public Observable CVObservable;
     public Observer VCObserver;
 
-
     public MazeController(CLI cli_view, MazeModel maze_model) {
         this.cli_view = cli_view;
         this.maze_model = maze_model;
-
 
         this.VCObservable = new Observable();
         this.CVObserver = new Observer();
@@ -44,7 +41,6 @@ public class MazeController implements IController {
         this.CVObservable = new Observable();
         this.VCObserver = new Observer();
         CVObservable.add(VCObserver);
-
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
@@ -61,14 +57,12 @@ public class MazeController implements IController {
             if (this.maze_model.validateRetrievedCommand()) {
 
                 // transferring the validated data from the controller to the model, then executing the command:
-                this.CMObservable.setData(this.CMObserver.getData());
                 this.maze_model.executeCommand();
             }
 
             // Transferring data from the model to the view, then handling the message on view:
             this.CVObservable.setData(this.CMObserver.getData());
             this.cli_view.showMessage();
-
         }
     }
 }

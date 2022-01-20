@@ -8,6 +8,8 @@ import java.util.*;
 
 public class MazeIUserCommands extends IUserCommandsAbc {
 
+    private ArrayList<Maze2d> generatedMazes = new ArrayList<>();
+
     public MazeIUserCommands() {
         super();
         this.putCommand("dir", new dirICommand());
@@ -19,6 +21,30 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         this.putCommand("filesize", new fileSizeICommand());
         this.putCommand("exit", new exitICommand());
     }
+
+    public ArrayList<Maze2d> getAllGeneratedMazes() { return this.generatedMazes; }
+
+    public void addGeneratedMazesPath(Maze2d genMaze) {
+        generatedMazes.add(genMaze);
+    }
+    public Maze2d getGeneratedMaze(String desiredMazeName) {
+        for (Maze2d maze : generatedMazes) {
+            if (maze.getMazeName().equals(desiredMazeName))
+                return maze;
+        }
+        return null;
+    }
+
+    public void removeGeneratedMaze(String mazeName) {
+        for (Maze2d maze : generatedMazes) {
+            if (maze.getMazeName().equals(mazeName)) {
+                generatedMazes.remove(maze);
+                return;
+            }
+        }
+    }
+
+
 
     @Override
     public String validateCommand(String[] inputBuf) {
@@ -44,19 +70,18 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     // in path:
     private class dirICommand implements ICommand {
         @Override
-        public void doCommand(String path) throws IOException {
+        public String doCommand(String path) throws IOException {
 
             StringBuilder retStr = new StringBuilder();
             String fullPathStr = System.getProperty("user.dir");
 
-            if (!path.equals(".")) {
+            if (!path.equals("."))
                 fullPathStr = System.getProperty("user.dir") + "\\" + path;
-            }
 
-            if (Files.isRegularFile(Paths.get(fullPathStr))) {
+            if (Files.isRegularFile(Paths.get(fullPathStr)))
                 retStr.append(fullPathStr).append("\n");
 
-            } else if (Files.isDirectory(Paths.get(fullPathStr))) {
+            else if (Files.isDirectory(Paths.get(fullPathStr))) {
                 for (Path p : Files.newDirectoryStream(Paths.get(fullPathStr))) {
                     // Case the path isn't a dir:
                     if(!Files.isDirectory(Paths.get(p.getFileName().toString())) && Files.isRegularFile(p)) {
@@ -72,11 +97,11 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             String retValidation = validateParams(retStr.toString());
 
             if (retValidation.equals(""))
-                maze_model.mazeController.MCObservable.setData(retStr.toString());
-            else
-                maze_model.mazeController.MCObservable.setData(retValidation);
+               retValidation = retStr.toString();
+            return retValidation;
 
         }
+
         @Override
         public String validateParams(String param) {
             if (!param.equals(""))
@@ -90,30 +115,29 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     private class generateICommand implements ICommand {
 
         @Override
-        public void doCommand(String genParams) {
-
+        public String doCommand(String genParams) {
 
             String retValidation = validateParams(genParams);
 
-            if(!retValidation.equals("")) {
-                maze_model.mazeController.MCObservable.setData(retValidation);
-                return;
-            }
+            if(!retValidation.equals(""))
+                return retValidation;
+
             ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(genParams.split("-")));
+            Maze2d retMaze2d = generateMaze(genParamsLst.get(0), Integer.parseInt(genParamsLst.get(2)));
 
-            Maze2d retMaze2d = maze_model.generateMaze(genParamsLst.get(0), genParamsLst.get(1), Integer.parseInt(genParamsLst.get(2)));
+            if (retMaze2d != null) {
+                retMaze2d.setMazeName(genParamsLst.get(1));
+                addGeneratedMazesPath(retMaze2d);
 
-            if (genMaze2D != null) {
-                genMaze2D.setMazeName(mazeName);
-                addGeneratedMazesPath(genMaze2D);
-                mazeController.MCObservable.setData(mazeName + " " + mazeType + " with size of " + mazeSize + " generated!\n");
+                return genParamsLst.get(1) + " " + genParamsLst.get(0) +
+                        " with size of " + genParamsLst.get(2) + " generated!\n";
             }
+            return "Generating maze failed!\n";
         }
 
-        public Maze2d generateMaze(String mazeType, String mazeName, int mazeSize) {
+        public Maze2d generateMaze(String mazeType, int mazeSize) {
 
             IMaze2dGenerator imaze2DGenerator = null;
-
             if (mazeType.equals("simplemaze")) {
                 imaze2DGenerator = new SimpleIIMaze2DGenerator();
             }
@@ -122,7 +146,6 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             }
 
             return imaze2DGenerator.generate(mazeSize);
-
         }
 
         @Override
@@ -134,9 +157,8 @@ public class MazeIUserCommands extends IUserCommandsAbc {
                 return "genmaze received not a number value, aborted!\n";
             }
 
-            if (!genParamsLst.get(0).equals("simplemaze") && !genParamsLst.get(0).equals("mymaze")) {
+            if (!genParamsLst.get(0).equals("simplemaze") && !genParamsLst.get(0).equals("mymaze"))
                 return "Wrong maze type provided!\n";
-            }
 
             return "";
         }
@@ -144,29 +166,28 @@ public class MazeIUserCommands extends IUserCommandsAbc {
 
         private class displayICommand implements ICommand {
             @Override
-            public void doCommand(String param) {
+            public String doCommand(String param) {
 
                 StringBuilder retStr = new StringBuilder();
                 String retValidation = validateParams(param);
 
                 // in case all mazes need to be shown (show all mazes names):
                 if (retValidation.equals("all")) {
-                    for (Maze2d maze : maze_model.getAllGeneratedMazes()) {
+                    for (Maze2d maze : getAllGeneratedMazes()) {
                         retStr.append(maze.getMazeName()).append("\n");
                     }
                 }
 
                 // show specific maze (structure):
-                else {
-                    retStr.append(maze_model.getGeneratedMaze(param));
-                }
+                else
+                    retStr.append(getGeneratedMaze(param));
 
                 if(retStr.toString().equals("null"))
-                    maze_model.mazeController.MCObservable.setData("maze " + param + " not found!\n");
+                    return "maze " + param + " not found!\n";
                 else if(retStr.toString().equals(""))
-                    maze_model.mazeController.MCObservable.setData("No generated mazes!\n");
+                    return "No generated mazes!\n";
                 else
-                    maze_model.mazeController.MCObservable.setData(retStr.toString());
+                    return retStr.toString();
             }
 
             @Override
@@ -181,22 +202,34 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         private class saveICommand implements ICommand {
 
             @Override
-            public void doCommand(String mazeName) throws IOException {
+            public String doCommand(String mazeName) throws IOException {
                 String retValidation = validateParams(mazeName);
 
-                if (!retValidation.equals("")) {
-                    maze_model.mazeController.MCObservable.setData(retValidation);
-                    return;
+                if (!retValidation.equals(""))
+                    return retValidation;
+                return saveMaze(mazeName);
+            }
+
+
+            public String saveMaze(String mazeName) throws IOException {
+
+                MazeCompression MC = new MazeCompression();
+
+                String retSaveMazeStr = MC.encodeHuffmanAndSave(getGeneratedMaze(mazeName), mazeName);
+                if (retSaveMazeStr.equals(mazeName + ".bin")) {
+
+                    // remove saved maze from generatedMazesPaths:
+                    removeGeneratedMaze(mazeName);
+                   return retSaveMazeStr + " saved successfully!\n";
                 }
-                maze_model.saveMaze(mazeName);
+                return "Saving maze failed!\n";
             }
 
             @Override
             public String validateParams(String param) {
-                Maze2d dynamicMaze = maze_model.getGeneratedMaze(param);
+                Maze2d dynamicMaze = getGeneratedMaze(param);
                 if (dynamicMaze != null)
                     return "";
-
                 return "No such dynamic maze!\n";
             }
         }
@@ -205,14 +238,13 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     private class loadICommand implements ICommand {
 
         @Override
-        public void doCommand(String path) throws IOException {
+        public String doCommand(String path) throws IOException {
 
             String retValidation = validateParams(path);
             if (!retValidation.equals("")) {
-                maze_model.mazeController.MCObservable.setData(retValidation);
-                return;
+                return retValidation;
             }
-            maze_model.loadMaze(path);
+            return loadMaze(path);
         }
 
         @Override
@@ -222,29 +254,40 @@ public class MazeIUserCommands extends IUserCommandsAbc {
                 return param + " is not a valid file!\n";
             return "";
         }
+
+        public String loadMaze(String path) throws IOException {
+
+            MazeCompression MC = new MazeCompression();
+
+            Maze2d encodedMaze2D = MC.decodeHuffmanMazeFileToMaze(path);
+            addGeneratedMazesPath(encodedMaze2D);
+
+            return encodedMaze2D.getMazeName() + " loaded!\n";
+        }
+
     }
 
     // get size of the maze before compression:
     private class mazeSizeICommand implements ICommand {
 
         @Override
-        public void doCommand(String mazeName) {
-           Maze2d mSizeMaze = maze_model.getGeneratedMaze(mazeName);
+        public String doCommand(String mazeName) {
+           Maze2d mSizeMaze = getGeneratedMaze(mazeName);
 
             String retValidation = validateParams(mazeName);
 
             if (!retValidation.equals("")) {
-                maze_model.mazeController.MCObservable.setData("maze size before compression: " +
-                        (mSizeMaze.getMazeStructure()[0].length * mSizeMaze.getMazeStructure().length) + "\n");
+                return "maze size before compression: " +
+                        (mSizeMaze.getMazeStructure()[0].length * mSizeMaze.getMazeStructure().length) + "\n";
             }
            else
-               maze_model.mazeController.MCObservable.setData(retValidation);
+               return retValidation;
         }
 
         @Override
         public String validateParams(String param) {
 
-            Maze2d d = maze_model.getGeneratedMaze(param);
+            Maze2d d = getGeneratedMaze(param);
             if (d != null)
                 return "";
             return "This maze name wasn't located on the dynamic mazes!\n";
@@ -254,16 +297,16 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     private class fileSizeICommand implements ICommand {
 
         @Override
-        public void doCommand(String path) throws IOException {
+        public String doCommand(String path) throws IOException {
 
             String retValidation = validateParams(path);
 
             if (retValidation.equals("")) {
                 long bytes = Files.size(Path.of(path));
-                maze_model.mazeController.MCObservable.setData("compressed size of file: " + bytes + "\n");
+                return "compressed size of file: " + bytes + "\n";
             }
             else
-                maze_model.mazeController.MCObservable.setData(retValidation);
+                return retValidation;
         }
 
         @Override
@@ -277,9 +320,11 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     private class exitICommand implements ICommand {
 
         @Override
-        public void doCommand(String path) {
+        public String doCommand(String path) {
             clearCommands();
             System.exit(0);
+
+            return "";
         }
 
         // No params in exitCommand, so in this case this validation isn't needed:
@@ -292,6 +337,4 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     public boolean isValidCommand(String providedCommand) {
         return this.commands.containsKey(providedCommand);
     }
-
 }
-

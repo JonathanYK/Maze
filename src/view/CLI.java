@@ -17,12 +17,10 @@ public class CLI implements IView {
 
     boolean welcomeLogoPrinted = false;
 
-
     // default constructor with default IOstreams (console IO):
     public CLI() {
         this.is = System.in;
         this.os = System.out;
-
         this.uc = new MazeIUserCommands();
     }
 

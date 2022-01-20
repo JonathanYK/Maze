@@ -22,6 +22,5 @@ public class MainMazeClass {
 
         // Main maze menu initiation:
         mazeController.mainMazeCommandsMenu();
-
     }
 }

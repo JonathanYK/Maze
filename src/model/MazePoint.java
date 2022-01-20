@@ -15,7 +15,6 @@ public class MazePoint {
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }
@@ -44,8 +43,6 @@ public class MazePoint {
         sb.append("][");
         sb.append(this.getY());
         sb.append("]");
-
         return sb.toString();
     }
-
 }
