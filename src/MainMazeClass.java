@@ -1,6 +1,6 @@
 import controller.MazeController;
 import model.MazeModel;
-import view.CLI;
+import view.Cli;
 
 // Main class that initiating the main application:
 public class MainMazeClass {
@@ -10,15 +10,19 @@ public class MainMazeClass {
         // Model:
         MazeModel mazeModel = new MazeModel();
 
+
         // View:
-        CLI mazeCli = new CLI();
+        Cli mazeCli = new Cli();
+
         // Instead of using CLI, we can use is.txt as input commands and os.txt as output:
-        // CLI _cli = new CLI("is.txt", "os.txt", mazeModel);
+        //CLI _cli = new CLI("is.txt", "os.txt");
+
 
         // Controller:
         MazeController mazeController = new MazeController(mazeCli, mazeModel);
         mazeCli.setController(mazeController);
         mazeModel.setController(mazeController);
+
 
         // Main maze menu initiation:
         mazeController.mainMazeCommandsMenu();

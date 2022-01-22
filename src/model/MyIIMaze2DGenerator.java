@@ -8,7 +8,7 @@ public class MyIIMaze2DGenerator extends AbstractIMaze2DGenerator {
     public Maze2d generate(int mazeSize) {
         Maze2d maze = new Maze2d(mazeSize);
 
-        // creating whole maze using random Prim's algorithm:
+        // Creating whole maze using Prim's random algorithm:
         createRandMazePrim(maze);
 
         return maze;
@@ -24,40 +24,39 @@ public class MyIIMaze2DGenerator extends AbstractIMaze2DGenerator {
             for (int j = 0; j < maze.mazeSize; j++)
                 pointsPath[i][j] = new MazePoint(i, j);
 
-        // inserting start point to the maze structure:
+        // Inserting start point to the maze structure:
         MazePoint entranceMazePoint = pointsPath[maze.getEntrance().x][maze.getEntrance().y];
         mazeStructure.add(new MazePoint[] {entranceMazePoint, entranceMazePoint});
 
 
-        // while there are unvisited available dual neighbors:
+        // While there are unvisited available dual neighbors:
         while (!mazeStructure.isEmpty()) {
 
-            // get random dual neighbor:
+            // Get random dual neighbor:
             MazePoint[] currDualNeighbor = mazeStructure.remove(rand.nextInt(mazeStructure.size()));
 
-            // in case the SECOND nearest isn't visited (no path between them):
+            // In case the SECOND nearest isn't visited (no path between them):
             if(!pointsPath[currDualNeighbor[1].getX()][currDualNeighbor[1].getY()].isVisited()) {
 
-                // set both first nearest and second nearest as visited (create path):
+                // Set both first nearest and second nearest as visited (create path):
                 pointsPath[currDualNeighbor[0].getX()][currDualNeighbor[0].getY()].setVisited(true);
                 pointsPath[currDualNeighbor[1].getX()][currDualNeighbor[1].getY()].setVisited(true);
 
-                // set visited both neighbors on myMaze:
+                // Set visited both neighbors on myMaze:
                 maze.setPointVal(currDualNeighbor[0].getX(), currDualNeighbor[0].getY(), true);
                 maze.setPointVal(currDualNeighbor[1].getX(), currDualNeighbor[1].getY(), true);
 
-                // get all dual available neighbors:
+                // Get all dual available neighbors:
                 getDualAvailNeighbors(maze, pointsPath, currDualNeighbor, mazeStructure);
 
             }
         }
-        // set the exit point as a valid path:
+        // Set the exit point as a valid path:
         maze.setPointVal((int) maze.exit.getX(), (int) maze.exit.getX(), true);
 
         // While using even maze, we should clear manually the cell near the exit:
         if (maze.mazeSize%2 == 0)
             maze.setPointVal(maze.mazeSize-2, maze.mazeSize-1, true);
-
     }
 
     // This method used for getting dual neighbors (first nearest and second nearest from North/South/East/West):
@@ -66,7 +65,7 @@ public class MyIIMaze2DGenerator extends AbstractIMaze2DGenerator {
 
         // We'll search for two neighbors where between them a wall - then we'll destroy this wall.
 
-        // only the SECOND nearest is relevant:
+        // Only the SECOND nearest is relevant:
         int secX = currDualNeighbor[1].getX();
         int secY = currDualNeighbor[1].getY();
 

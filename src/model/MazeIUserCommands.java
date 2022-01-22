@@ -24,9 +24,8 @@ public class MazeIUserCommands extends IUserCommandsAbc {
 
     public ArrayList<Maze2d> getAllGeneratedMazes() { return this.generatedMazes; }
 
-    public void addGeneratedMazesPath(Maze2d genMaze) {
-        generatedMazes.add(genMaze);
-    }
+    public void addGeneratedMazesPath(Maze2d genMaze) { generatedMazes.add(genMaze); }
+
     public Maze2d getGeneratedMaze(String desiredMazeName) {
         for (Maze2d maze : generatedMazes) {
             if (maze.getMazeName().equals(desiredMazeName))
@@ -34,7 +33,6 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         }
         return null;
     }
-
     public void removeGeneratedMaze(String mazeName) {
         for (Maze2d maze : generatedMazes) {
             if (maze.getMazeName().equals(mazeName)) {
@@ -43,8 +41,6 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             }
         }
     }
-
-
 
     @Override
     public String validateCommand(String[] inputBuf) {
@@ -65,10 +61,17 @@ public class MazeIUserCommands extends IUserCommandsAbc {
         return inputBuf[0] + " " + inputBuf[1];
     }
 
-
-    // this method will print full path of the file in case file name provided as path, otherwise return all the files
-    // in path:
+    // This method will print full path of the file in case file name provided as path,
+    // otherwise return all the files in path:
     private class dirICommand implements ICommand {
+
+        @Override
+        public String validateParams(String param) {
+            if (!param.equals(""))
+                return param;
+            return "Wrong parameter provided!\n";
+        }
+
         @Override
         public String doCommand(String path) throws IOException {
 
@@ -84,7 +87,7 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             else if (Files.isDirectory(Paths.get(fullPathStr))) {
                 for (Path p : Files.newDirectoryStream(Paths.get(fullPathStr))) {
                     // Case the path isn't a dir:
-                    if(!Files.isDirectory(Paths.get(p.getFileName().toString())) && Files.isRegularFile(p)) {
+                    if (!Files.isDirectory(Paths.get(p.getFileName().toString())) && Files.isRegularFile(p)) {
 
                         // Saving only .bin files:
                         String fileName = p.getFileName().toString();
@@ -97,22 +100,29 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             String retValidation = validateParams(retStr.toString());
 
             if (retValidation.equals(""))
-               retValidation = retStr.toString();
+                retValidation = retStr.toString();
             return retValidation;
-
-        }
-
-        @Override
-        public String validateParams(String param) {
-            if (!param.equals(""))
-                return param;
-            return "Wrong parameter provided!\n";
         }
     }
 
-    // generating mazes: kind-mazename-mazesize
-    // example: genmaze simplemaze-my_new_maze-15
+    // Generating mazes: kind-mazename-mazesize
+    // for example, genmaze simplemaze-my_new_maze-15
     private class generateICommand implements ICommand {
+
+        @Override
+        public String validateParams(String param) {
+            ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(param.split("-")));
+            try {
+                Integer.parseInt(genParamsLst.get(2));
+            } catch (NumberFormatException nfe) {
+                return "genmaze command received a non-number value, aborted!\n";
+            }
+
+            if (!genParamsLst.get(0).equals("simplemaze") && !genParamsLst.get(0).equals("mymaze"))
+                return "Wrong maze type provided!\n";
+
+            return "";
+        }
 
         @Override
         public String doCommand(String genParams) {
@@ -147,38 +157,31 @@ public class MazeIUserCommands extends IUserCommandsAbc {
 
             return imaze2DGenerator.generate(mazeSize);
         }
-
-        @Override
-        public String validateParams(String param) {
-            ArrayList<String> genParamsLst = new ArrayList<>(Arrays.asList(param.split("-")));
-            try {
-                Integer.parseInt(genParamsLst.get(2));
-            } catch (NumberFormatException nfe) {
-                return "genmaze received not a number value, aborted!\n";
-            }
-
-            if (!genParamsLst.get(0).equals("simplemaze") && !genParamsLst.get(0).equals("mymaze"))
-                return "Wrong maze type provided!\n";
-
-            return "";
-        }
     }
 
         private class displayICommand implements ICommand {
+
+            @Override
+            public String validateParams(String param) {
+                if (param.equals("mazes") || param.equals("all"))
+                    return "all";
+                return "";
+            }
+
             @Override
             public String doCommand(String param) {
 
                 StringBuilder retStr = new StringBuilder();
                 String retValidation = validateParams(param);
 
-                // in case all mazes need to be shown (show all mazes names):
+                // In case all mazes need to be shown (show all mazes names):
                 if (retValidation.equals("all")) {
                     for (Maze2d maze : getAllGeneratedMazes()) {
                         retStr.append(maze.getMazeName()).append("\n");
                     }
                 }
 
-                // show specific maze (structure):
+                // Show specific maze (structure):
                 else
                     retStr.append(getGeneratedMaze(param));
 
@@ -189,17 +192,18 @@ public class MazeIUserCommands extends IUserCommandsAbc {
                 else
                     return retStr.toString();
             }
+        }
+
+        // Save compressed maze binary file from already generated mazes:
+        private class saveICommand implements ICommand {
 
             @Override
             public String validateParams(String param) {
-                if (param.equals("mazes") || param.equals("all"))
-                    return "all";
-                return "";
+                Maze2d dynamicMaze = getGeneratedMaze(param);
+                if (dynamicMaze != null)
+                    return "";
+                return "No such dynamic maze!\n";
             }
-        }
-
-        // save compressed maze binary file from already generated mazes:
-        private class saveICommand implements ICommand {
 
             @Override
             public String doCommand(String mazeName) throws IOException {
@@ -210,7 +214,6 @@ public class MazeIUserCommands extends IUserCommandsAbc {
                 return saveMaze(mazeName);
             }
 
-
             public String saveMaze(String mazeName) throws IOException {
 
                 MazeCompression MC = new MazeCompression();
@@ -218,24 +221,24 @@ public class MazeIUserCommands extends IUserCommandsAbc {
                 String retSaveMazeStr = MC.encodeHuffmanAndSave(getGeneratedMaze(mazeName), mazeName);
                 if (retSaveMazeStr.equals(mazeName + ".bin")) {
 
-                    // remove saved maze from generatedMazesPaths:
+                    // Remove saved maze from generatedMazesPaths:
                     removeGeneratedMaze(mazeName);
                    return retSaveMazeStr + " saved successfully!\n";
                 }
                 return "Saving maze failed!\n";
             }
-
-            @Override
-            public String validateParams(String param) {
-                Maze2d dynamicMaze = getGeneratedMaze(param);
-                if (dynamicMaze != null)
-                    return "";
-                return "No such dynamic maze!\n";
-            }
         }
 
-    // load compressed maze from file and add it to dynamically generatedMazesPaths
+    // Load compressed maze from file and add it to dynamically generatedMazesPaths
     private class loadICommand implements ICommand {
+
+        @Override
+        public String validateParams(String param) {
+
+            if (!Files.isRegularFile(Path.of(param)))
+                return param + " is not a valid file!\n";
+            return "";
+        }
 
         @Override
         public String doCommand(String path) throws IOException {
@@ -247,14 +250,6 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             return loadMaze(path);
         }
 
-        @Override
-        public String validateParams(String param) {
-
-            if (!Files.isRegularFile(Path.of(param)))
-                return param + " is not a valid file!\n";
-            return "";
-        }
-
         public String loadMaze(String path) throws IOException {
 
             MazeCompression MC = new MazeCompression();
@@ -264,11 +259,19 @@ public class MazeIUserCommands extends IUserCommandsAbc {
 
             return encodedMaze2D.getMazeName() + " loaded!\n";
         }
-
     }
 
-    // get size of the maze before compression:
+    // Get size of the maze before compression:
     private class mazeSizeICommand implements ICommand {
+
+        @Override
+        public String validateParams(String param) {
+
+            Maze2d d = getGeneratedMaze(param);
+            if (d != null)
+                return "";
+            return "This maze name wasn't located on the dynamic mazes!\n";
+        }
 
         @Override
         public String doCommand(String mazeName) {
@@ -283,18 +286,16 @@ public class MazeIUserCommands extends IUserCommandsAbc {
            else
                return retValidation;
         }
-
-        @Override
-        public String validateParams(String param) {
-
-            Maze2d d = getGeneratedMaze(param);
-            if (d != null)
-                return "";
-            return "This maze name wasn't located on the dynamic mazes!\n";
-        }
     }
 
     private class fileSizeICommand implements ICommand {
+
+        @Override
+        public String validateParams(String param) {
+            if (Files.isRegularFile(Path.of(param)))
+                return "";
+            return "This filename wasn't found!\n";
+        }
 
         @Override
         public String doCommand(String path) throws IOException {
@@ -308,28 +309,20 @@ public class MazeIUserCommands extends IUserCommandsAbc {
             else
                 return retValidation;
         }
-
-        @Override
-        public String validateParams(String param) {
-            if (Files.isRegularFile(Path.of(param)))
-                return "";
-            return "This filename wasn't found!\n";
-        }
     }
 
     private class exitICommand implements ICommand {
+
+        // No params in exitCommand, so in this case this validation isn't needed:
+        @Override
+        public String validateParams(String param) {
+            return "";
+        }
 
         @Override
         public String doCommand(String path) {
             clearCommands();
             System.exit(0);
-
-            return "";
-        }
-
-        // No params in exitCommand, so in this case this validation isn't needed:
-        @Override
-        public String validateParams(String param) {
             return "";
         }
     }
@@ -337,4 +330,5 @@ public class MazeIUserCommands extends IUserCommandsAbc {
     public boolean isValidCommand(String providedCommand) {
         return this.commands.containsKey(providedCommand);
     }
+
 }

@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-
 // Huffman tree node:
 class Node {
     Character ch;
@@ -34,18 +33,19 @@ public class MazeCompression {
 
     public MazeCompression() throws IOException {
 
-        // if mazeCnt.txt exists:
+        // If mazeCnt.txt exists:
         if (_mazeCntFile.exists() && !_mazeCntFile.isDirectory()) {
 
-            // read the existing mazeCnt:
+            // Read the existing mazeCnt:
             DataInputStream dis = new DataInputStream(new FileInputStream(_mazeCntFile));
             _mazeCnt = dis.read();
             dis.close();
         }
 
-        // if mazeCnt.txt not exists:
+        // If mazeCnt.txt not exists:
         else {
-            // create the file and set the val to 0:
+
+            // Create the file and set the val to 0:
             boolean mazeCntTxtCreated = _mazeCntFile.createNewFile();
             if (!mazeCntTxtCreated)
                 throw new IOException("Unable to create mazeCnt file at specified path. Please check that!");
@@ -56,17 +56,18 @@ public class MazeCompression {
         }
     }
 
+    // This method used in order to save and increments the initiated mazes count in _mazeCntFile
     public int getUpdateMazeCnt() throws IOException {
 
-        // read the value of mazeCntTxt:
+        // Read the value of mazeCntTxt:
         DataInputStream dis = new DataInputStream(new FileInputStream(_mazeCntFile));
         int updatedMazeCnt = dis.read();
         dis.close();
 
-        // increment updatedMazeCnt:
+        // Increment updatedMazeCnt:
         updatedMazeCnt++;
 
-        // write updatedMazeCnt to mazeCntTxt:
+        // Write updatedMazeCnt to mazeCntTxt:
         DataOutputStream dos = new DataOutputStream(new FileOutputStream(_mazeCntFile));
         dos.write(updatedMazeCnt);
         dos.close();
@@ -74,7 +75,7 @@ public class MazeCompression {
         return updatedMazeCnt;
     }
 
-    // Traverse huffman tree, then storing codes in a map:
+    // Traverse huffman tree, then store each character code in a map:
     public static void encode(Node root, String str, Map<Character, String> huffmanCode) {
         if (root == null)
             return;
@@ -87,8 +88,7 @@ public class MazeCompression {
         encode(root.right, str + '1', huffmanCode);
     }
 
-
-    // check if node is a leaf:
+    // Check if node is a leaf:
     public static boolean isLeaf(Node root) {
         return root.left == null && root.right == null;
     }
@@ -110,13 +110,12 @@ public class MazeCompression {
 
         pq = new PriorityQueue<>(Comparator.comparingInt(l -> l.freq));
 
-
-        // create a leaf node for each character and add it to the priority queue:
+        // Create a leaf node for each character and add it to the priority queue:
         for (var entry : freqCharAmountMap.entrySet()) {
             pq.add(new Node(entry.getKey(), entry.getValue()));
         }
 
-        // main looping until last node:
+        // Main looping until last node:
         while (pq.size() != 1) {
             // Remove two nodes with highest frequency:
             Node left = pq.poll();
@@ -231,7 +230,7 @@ public class MazeCompression {
         return encodeHuffmanAndSave(currMaze, null);
     }
 
-    // encoding using Huffman and saving the
+    // Encode the maze using Huffman algorithm, saving the encoded maze in a binary file, returning its name:
     public String encodeHuffmanAndSave(Maze2d currMaze, String mazeName) throws IOException {
 
         String compressedMazeFilename;

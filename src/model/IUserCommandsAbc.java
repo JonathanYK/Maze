@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public abstract class IUserCommandsAbc implements IUserCommands {
 
-    // hashmap that holds all the created commands:
+    // Hashmap that holds all the created commands:
     protected HashMap<String, ICommand> commands;
 
     public IUserCommandsAbc() {

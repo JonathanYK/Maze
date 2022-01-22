@@ -1,15 +1,15 @@
 package controller;
 
 import model.MazeModel;
-import view.CLI;
-
+import view.Cli;
 import java.io.IOException;
 
 public class MazeController {
 
-    private CLI cli_view;
+    private Cli cli_view;
     private MazeModel maze_model;
 
+    // Observer pattern control variables. VC stands for View-Controller (M-Model, V-View, C-Controller).
     public Observable VCObservable;
     public Observer CVObserver;
 
@@ -22,7 +22,7 @@ public class MazeController {
     public Observable CVObservable;
     public Observer VCObserver;
 
-    public MazeController(CLI cli_view, MazeModel maze_model) {
+    public MazeController(Cli cli_view, MazeModel maze_model) {
         this.cli_view = cli_view;
         this.maze_model = maze_model;
 

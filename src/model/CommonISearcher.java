@@ -17,7 +17,7 @@ CommonISearcher implements ISearcher {
         this._evaluatedNodes++;
     }
 
-    // checking if curState already visited:
+    // Checking if curState already visited:
     protected boolean isStateAlreadyInArraylist(State curState, ArrayList<State> StatesArraylist) {
 
         for (State visitedState : StatesArraylist) {

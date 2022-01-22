@@ -7,7 +7,7 @@ public abstract class AbstractIMaze2DGenerator implements IMaze2dGenerator {
         String retStr;
 
         if (mazeSize < 3) {
-            throw new MazeSizeException("maze size has to be bigger then 2");
+            throw new MazeSizeException("Maze size has to be bigger then 2");
         }
         long startMeasuringTime = System.currentTimeMillis();
         generate(mazeSize);
@@ -15,7 +15,7 @@ public abstract class AbstractIMaze2DGenerator implements IMaze2dGenerator {
 
         long totalMilis = finishMeasuringTime - startMeasuringTime;
         long seconds = (totalMilis / 1000) % 60;
-        retStr = "\n{" + this.getClass().getSimpleName() + "}" + ": Executing took: " + seconds + "." +
+        retStr = "\n{" + this.getClass().getSimpleName() + "}" + ": executing took: " + seconds + ". " +
                 String.format("%04d", totalMilis) + " seconds.\n";
 
         return retStr;

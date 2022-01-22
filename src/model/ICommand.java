@@ -3,6 +3,6 @@ package model;
 import java.io.IOException;
 
 public interface ICommand {
-    String doCommand(String arg) throws ClassNotFoundException, IOException;
     String validateParams(String param);
+    String doCommand(String arg) throws ClassNotFoundException, IOException;
 }

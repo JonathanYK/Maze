@@ -2,17 +2,16 @@ package controller;
 
 import model.IObservable;
 import view.IObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
+// Observable is the subject in the observer design pattern, that implements the IObservable that features the subject object.
 public class Observable implements IObservable {
-
-    private String data;
 
     public String getData() {
         return this.data;
     }
+    private String data;
 
     public void setData(String data) {
         this.data = data;
@@ -31,7 +30,6 @@ public class Observable implements IObservable {
 
     @Override
     public void notifier() {
-
         for (IObserver obs : observables) {
             obs.update(this);
         }

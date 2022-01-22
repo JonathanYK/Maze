@@ -7,7 +7,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class CLI implements IView {
+public class Cli implements IView {
 
     InputStream is;
     OutputStream os;
@@ -17,19 +17,19 @@ public class CLI implements IView {
 
     boolean welcomeLogoPrinted = false;
 
-    // default constructor with default IOstreams (console IO):
-    public CLI() {
+    // Default constructor with default IOstreams (console IO):
+    public Cli() {
         this.is = System.in;
         this.os = System.out;
         this.uc = new MazeIUserCommands();
     }
 
-    public CLI(String inputFileStr, String outputFileStr, MazeModel model) throws Exception {
+    public Cli(String inputFileStr, String outputFileStr) throws Exception {
         File initialFile = new File(inputFileStr);
         this.is = new FileInputStream(initialFile);
         File osFile = new File(outputFileStr);
 
-        // check if appending or rewriting the file:
+        // Check if appending or rewriting the file:
         boolean fileCreated = osFile.createNewFile();
         if (!fileCreated) {
             Scanner sc = new Scanner(System.in);

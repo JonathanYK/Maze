@@ -2,11 +2,11 @@ package model;
 
 import java.util.ArrayList;
 
-public class ASTAR extends CommonISearcher {
+public class Astar extends CommonISearcher {
 
     public Solution search(ISearchable ISearchable) {
 
-        // shortest (_solution) state path:
+        // Shortest (_solution) state path:
         Solution _solution = new Solution();
 
         // ArrayList that holds the discovered states:
@@ -24,14 +24,14 @@ public class ASTAR extends CommonISearcher {
 
         // Adding entrance state to _StatesOpenedPool:
         _StatesOpenedPool.add(EntranceState);
-        // evaluate on every state move:
+        // Evaluate on every state move:
         this.evaluated();
 
         while (!_StatesOpenedPool.isEmpty()) {
 
             State currState = _StatesOpenedPool.get(0);
 
-            // finding the best next point - with the best fCost (or hCost if 4 = {controller.State@882} there is more then one point with best fCost)
+            // Finding the best next point - with the best fCost (or hCost if 4 = {controller.State@882} there is more then one point with best fCost)
             for (int i = 1; i <= _StatesOpenedPool.size() - 1; i++) {
                 if (_StatesOpenedPool.get(i).getFcost() < currState.getFcost() ||
                         _StatesOpenedPool.get(i).getFcost() == currState.getFcost() &&
@@ -41,7 +41,7 @@ public class ASTAR extends CommonISearcher {
                 }
             }
 
-            // moving the selected best fCost state from discovered to visited pool:
+            // Moving the selected best fCost state from discovered to visited pool:
             _StatesOpenedPool.remove(currState);
 
             if (!isStateAlreadyInArraylist(currState, _StatesClosedPool)) {
@@ -49,35 +49,35 @@ public class ASTAR extends CommonISearcher {
             }
 
             if (currState.getStringState().equals(ExitState.getStringState())) {
-                // get the _solution path from parent:
+                // Get the _solution path from parent:
                 _solution.setSolution(currState);
                 return _solution;
             }
 
-            // get all possible neighbors of currState:
+            // Get all possible neighbors of currState:
             ArrayList<State> availNeighbors = ISearchable.getAllPossibleStates(currState);
 
-            // iterating on all neighbors:
+            // Iterating on all neighbors:
             for (State iterNeighborState : availNeighbors) {
 
-                // if iterNeighbor already visited, skip it:
+                // If iterNeighbor already visited, skip it:
                 if (_StatesClosedPool.contains(iterNeighborState))
                     continue;
 
-                // if we found a better path to iterNeighborState (parent with less moves) or iterNeighborState isn't discovered at all:
+                // If we found a better path to iterNeighborState (parent with less moves) or iterNeighborState isn't discovered at all:
                 if (currState.getGcost() + 1 < iterNeighborState.getGcost() || !_StatesOpenedPool.contains(iterNeighborState)) {
 
-                    // calculate iterNeighborState costs:
+                    // Calculate iterNeighborState costs:
                     iterNeighborState.setGcost(EntranceState);
                     iterNeighborState.setHcost(ExitState);
 
-                    // set parent of iterNeighbor
+                    // Set parent of iterNeighbor
                     iterNeighborState.setParent(currState);
 
-                    // if iterNeighborState not in discovered pool (prev if was true of first condition):
+                    // If iterNeighborState not in discovered pool (prev if was true of first condition):
                     if (!isStateAlreadyInArraylist(iterNeighborState, _StatesOpenedPool) && !isStateAlreadyInArraylist(iterNeighborState, _StatesClosedPool))
                         _StatesOpenedPool.add(iterNeighborState);
-                        // evaluate on every state move:
+                        // Evaluate on every state move:
                         this.evaluated();
                 }
             }

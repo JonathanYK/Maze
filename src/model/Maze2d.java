@@ -12,7 +12,6 @@ public class Maze2d {
     Point exit;
 
     public Maze2d(String mazeName, int mazeSize, Point entrance, Point exit, boolean[][] mazeStructure) {
-
         this.mazeName = mazeName;
         this.mazeSize = mazeSize;
         this.entrance = entrance;
@@ -20,21 +19,19 @@ public class Maze2d {
         this.mazeStructure = mazeStructure;
     }
 
-
     public Maze2d(int mazeSize) {
 
-        // initiating maze structure (default params are false):
+        // Initiating maze structure (default params are false):
         this.mazeStructure = new boolean[mazeSize][mazeSize];
 
         this.mazeSize = mazeSize;
 
-        // default entrance point is (0,0):
+        // Default entrance point is (0,0):
         this.entrance = new Point(0, 0);
 
-        // default exit is the bottom right corner:
+        // Default exit is the bottom right corner:
         this.exit = new Point(mazeSize - 1, mazeSize - 1);
     }
-
 
     public void setMazeName(String newMazeName) {
         this.mazeName = newMazeName;
@@ -54,7 +51,6 @@ public class Maze2d {
         return exit;
     }
 
-
     public void setCustomMaze(boolean[][] customMaze) throws Exception {
 
         if (customMaze[0].length != this.mazeSize || customMaze[1].length != this.mazeSize)
@@ -72,7 +68,6 @@ public class Maze2d {
 
     public ArrayList<Point> getPossibleSteps(Point currPoint) {
         return getPossibleSteps(currPoint, false);
-
     }
 
     public ArrayList<Point> getPossibleSteps(Point currPoint, boolean ignoreWalls) {
@@ -111,10 +106,9 @@ public class Maze2d {
         final char WALL_CHAR = '▓';
         final char BORDER_CHAR = '*';
 
-
         final StringBuilder sb = new StringBuilder();
 
-        // add upper maze wall:
+        // Add upper maze wall:
         sb.append(String.valueOf(BORDER_CHAR).repeat(this.mazeSize + 2));
         sb.append('\n');
 
@@ -127,7 +121,7 @@ public class Maze2d {
             sb.append('\n');
         }
 
-        // add bottom maze wall:
+        // Add bottom maze wall:
         sb.append(String.valueOf(BORDER_CHAR).repeat(this.mazeSize + 2));
         sb.append('\n');
 

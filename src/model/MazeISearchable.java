@@ -30,7 +30,6 @@ public class MazeISearchable implements ISearchable {
         return new Point(x,y);
     }
 
-
     public ArrayList<State> getAllPossibleStates(State currState) {
 
         ArrayList<State> _allPossibleStates = new ArrayList<>();

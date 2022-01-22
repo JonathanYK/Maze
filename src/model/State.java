@@ -40,15 +40,15 @@ public class State {
         _coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[0]
                 .replace("[", "").substring(2)));
 
-        //currStateY:
+        // currStateY:
         _coordinatesStates.add(Integer.parseInt(currState.getStringState().substring(14).split(",")[1]
                 .replace("[", "").replace("]","").substring(2)));
 
-        //destStateX:
+        // destStateX:
         _coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[0]
                 .replace("[", "").substring(2)));
 
-        //destStateY:
+        // destStateY:
         _coordinatesStates.add(Integer.parseInt(destState.getStringState().substring(14).split(",")[1]
                 .replace("[", "").replace("]","").substring(2)));
 

@@ -7,11 +7,11 @@ public class Demo {
 
     public static void main(String[] args) throws Exception {
 
-        BFS _bfsClass = new BFS();
-        ASTAR _ASTARClass = new ASTAR();
+        Bfs _bfsClass = new Bfs();
+        Astar _ASTARClass = new Astar();
 
-        SolvedMaze2d _simpleMazeSolved = new SolvedMaze2d();
-        SolvedMaze2d _myMazeSolved = new SolvedMaze2d();
+        Solution.SolvedMaze2d _simpleMazeSolved = new Solution.SolvedMaze2d();
+        Solution.SolvedMaze2d _myMazeSolved = new Solution.SolvedMaze2d();
 
         MazeCompression _MC = new MazeCompression();
         int mazeSize = 121;
@@ -63,23 +63,25 @@ public class Demo {
         System.out.println("\nBFS evaluation amount: " + _bfsClass.getPointEvaluationAmount());
         System.out.println("ASTAR evaluation amount: " + _ASTARClass.getPointEvaluationAmount());
     }
+
+    // In order to create custom maze:
+    public void createCustomMaze(Maze2d currMaze) throws Exception {
+
+        boolean[][] customMaze = {
+                {true, true, true, true, false, false, false, true, true, false, false},
+                {false, true, true, true, false, false, false, true, true, false, true},
+                {true, true, true, true, true, false, false, true, false, true, true},
+                {false, true, true, false, false, false, false, true, true, true, true},
+                {true, true, true, true, false, false, true, true, true, true, true},
+                {false, true, false, true, true, true, true, false, true, true, true},
+                {true, false, false, true, true, false, true, true, false, false, true},
+                {true, true, false, false, true, true, true, true, true, false, true},
+                {true, false, false, true, true, true, true, true, true, true, true},
+                {true, true, false, true, true, true, true, true, true, false, true},
+                {true, true, false, true, true, true, true, true, false, false, true}
+            };
+
+            currMaze.setCustomMaze(customMaze);
+    }
 }
 
-
-//          In order to create custom maze:
-//
-//        boolean[][] customMaze = {
-//                {true, true, true, true, false, false, false, true, true, false, false},
-//                {false, true, true, true, false, false, false, true, true, false, true},
-//                {true, true, true, true, true, false, false, true, false, true, true},
-//                {false, true, true, false, false, false, false, true, true, true, true},
-//                {true, true, true, true, false, false, true, true, true, true, true},
-//                {false, true, false, true, true, true, true, false, true, true, true},
-//                {true, false, false, true, true, false, true, true, false, false, true},
-//                {true, true, false, false, true, true, true, true, true, false, true},
-//                {true, false, false, true, true, true, true, true, true, true, true},
-//                {true, true, false, true, true, true, true, true, true, false, true},
-//                {true, true, false, true, true, true, true, true, false, false, true}
-//        };
-//
-//        simpleMaze2D.setCustomMaze(customMaze);

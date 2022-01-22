@@ -12,13 +12,13 @@ public class SimpleIIMaze2DGenerator extends AbstractIMaze2DGenerator {
     public Maze2d generate(int mazeSize) {
         Maze2d _maze = new Maze2d(mazeSize);
 
-        // set Random walls on generated _maze:
+        // Set Random walls on generated _maze:
         setRandomWalls(_maze);
 
-        // create path from entrance to exit of the _maze:
+        // Create path from entrance to exit of the _maze:
         Stack<MazePoint> currDFSPath = createPathIteratively(_maze);
 
-        // clear the _maze according to the path:
+        // Clear the _maze according to the path:
         clearMazeWithRoute(_maze, currDFSPath);
 
         return _maze;
@@ -78,7 +78,7 @@ public class SimpleIIMaze2DGenerator extends AbstractIMaze2DGenerator {
         return routesTrace;
     }
 
-    // validate the point wasn't visited
+    // Validate the point wasn't visited
     public boolean pointAlreadyTraced(Point p, ArrayList<MazePoint> alreadyVisited) {
         for (MazePoint av : alreadyVisited)
             if (av.getX() == p.x && av.getY() == p.y)
