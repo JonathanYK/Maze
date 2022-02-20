@@ -2,8 +2,8 @@
 
 
 In this project, I created a maze game where each maze could be initiated using one of the following algorithms:
->1. `"Random selection"` algorithm (simpleMaze) 
->2. `Prim's` algorithm(myMaze)
+>1. `"Random selection"` algorithm - `simpleMaze` 
+>2. `Prim's` algorithm - `myMaze`
 
 This project uses MVC architecture, where the view is a CLI interface. The communication between the layers implemented using observer pattern.
 
