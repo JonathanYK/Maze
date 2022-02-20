@@ -11,11 +11,11 @@ and decompressed back to a Maze2d. Using adapter pattern, Maze2d instance adapte
 
 On the main menu of this project - are the following available commands for execution:
 
-dir: 		printing the path of a maze/all files in path
-genmaze:	generating simpleMaze or myMaze
-display:	displays generated/loaded mazes
-savemaze:	saves generated/loaded mazes compressed
-loadmaze:	loads maze from compressed file
-mazesize:	returns the maze size (uncompressed)
-filesize:	returns the file size (compressed maze size for comparison)
-exit:		closes the whole application
+dir: printing the path of a maze/all files in path 
+genmaze: generating simpleMaze or myMaze 
+display: displays generated/loaded mazes 
+savemaze: saves generated/loaded mazes compressed 
+loadmaze: loads maze from compressed file 
+mazesize: returns the maze size (uncompressed) 
+filesize: returns the file size (compressed maze size for comparison) 
+exit: closes the whole application
