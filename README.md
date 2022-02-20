@@ -13,13 +13,13 @@ and decompressed back to a `Maze2d`. Using adapter pattern, `Maze2d` instance ad
 
 On the main menu of this project - are the following available commands for execution:
 
->**dir** printing the path of a maze/all files in path  
->**genmaze** generating simpleMaze or myMaze  
->**display** displays generated/loaded mazes  
->**savemaze** saves generated/loaded mazes compressed  
->**loadmaze** loads maze from compressed file  
->**mazesize** returns the maze size (uncompressed)  
->**filesize** returns the file size (compressed maze size for comparison)  
->**exit** closes the whole application 
+>**dir** &emsp; &emsp;  &emsp;  printing the path of a maze/all files in path  
+>**genmaze** &emsp; generating simpleMaze or myMaze  
+>**display** &emsp;  &emsp; displays generated/loaded mazes  
+>**savemaze** &emsp; saves generated/loaded mazes compressed  
+>**loadmaze** &emsp; loads maze from compressed file  
+>**mazesize** &emsp; returns the maze size (uncompressed)  
+>**filesize** &emsp; &ensp; returns the file size (compressed maze size for comparison)  
+>**exit** &emsp;  &emsp; closes the whole application 
 
 IDE: IntelliJ IDEA 2021.1.3
