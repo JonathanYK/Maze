@@ -1,25 +1,24 @@
 # Mazes world project
 
-
-In this project, I created a maze game where each maze could be initiated using one of the following algorithms:
+In this project, I developed a maze game with different maze initiation algorithms: 
 >1. `"Random selection"` algorithm - `simpleMaze` 
 >2. `Prim's` algorithm - `myMaze`
 
-This project uses MVC architecture, where the view is a CLI interface. The communication between the layers implemented using observer pattern.
+The project follows the `MVC` (Model-View-Controller) architecture, where the CLI interface serves as the view. Communication between the layers is implemented using the `observer pattern`.
 
-There is a Demo class that generating a `Maze2d` (`simpleMaze` or `myMaze`), it can be solved using `BFS`, `DFS` and `Astar` algorithms (All of the algorithms implemented locally).
-Then, the solution can be printed (showing the steps to the solution), saved compressed (using `Huffman Coding` algorithm) 
-and decompressed back to a `Maze2d`. Using adapter pattern, `Maze2d` instance adapted to `ISearchable` instance. 
+There is a Demo class that generates a `Maze2d` (`simpleMaze` or `myMaze`) and allows solving it using `BFS`, `DFS`, and `Astar` algorithms (all implemented locally).
+The solution can be displayed, saved in a compressed format using `Huffman Coding`, and decompressed back to a `Maze2d` object.
+The `Maze2d` instance is adapted to an `ISearchable` instance using the `adapter pattern`.
 
-On the main menu of this project - are the following available commands for execution:
+The main menu of the project provides several commands available for execution:
 
->**dir** &emsp; &emsp;  &emsp;  printing the path of a maze/all files in path  
->**genmaze** &emsp; generating simpleMaze or myMaze  
->**display** &emsp;  &emsp; displays generated/loaded mazes  
->**savemaze** &emsp; saves generated/loaded mazes compressed  
->**loadmaze** &emsp; loads maze from compressed file  
->**mazesize** &emsp; returns the maze size (uncompressed)  
->**filesize** &emsp; &ensp; returns the file size (compressed maze size for comparison)  
->**exit** &emsp;  &emsp; closes the whole application 
+>**dir** &emsp; &emsp;  &emsp;  Prints the path of a maze or all files in the specified directory.  
+>**genmaze** &emsp; Generates a maze using either the simpleMaze or myMaze algorithm.  
+>**display** &emsp;  &emsp; Displays the generated or loaded mazes.  
+>**savemaze** &emsp; Saves the generated or loaded mazes in a compressed format.  
+>**loadmaze** &emsp; Loads a maze from a compressed file.  
+>**mazesize** &emsp; Returns the size of the maze (uncompressed).  
+>**filesize** &emsp; &ensp; Returns the file size of the compressed maze for comparison.  
+>**exit** &emsp;  &emsp; Closes the application.  
 
-IDE: IntelliJ IDEA 2021.1.3
+The project was developed using IntelliJ IDEA 2021.1.3 as the IDE.
